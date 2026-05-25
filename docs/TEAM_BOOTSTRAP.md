@@ -8,6 +8,12 @@ This document defines what should be prepared before a mission starts and what t
 - Neon database/access
 - Any required third-party service accounts or secrets
 
+## Confirmed platform mapping for this repo
+- GitHub repo: `zvipev10/Agents-Vis`
+- Default branch: `main`
+- Vercel production URL: `https://agents-vis.vercel.app`
+- Vercel previews: branches / pull requests create preview deployments
+
 ## Team-owned setup
 - Repository structure
 - Local setup instructions
