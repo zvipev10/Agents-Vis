@@ -1,0 +1,55 @@
+# Team Bootstrap Checklist
+
+This document defines what should be prepared before a mission starts and what the team should receive.
+
+## External resources provided by the user
+- GitHub repository access
+- Vercel project/access
+- Neon database/access
+- Any required third-party service accounts or secrets
+
+## Team-owned setup
+- Repository structure
+- Local setup instructions
+- Environment template files
+- Mission workflow and role definitions
+- Test commands and validation flow
+- Integration-test strategy per feature
+- Deployment/runbook documentation
+
+## Role responsibilities
+
+### Coordinator
+- Own the mission plan
+- Decide what dev, QA, and production need for the mission
+- Define integration-test strategy for the feature
+- Decide promotion rules and release readiness
+
+### Product Manager
+- Define UX/UI
+- Define acceptance criteria
+- Define feature scope and edge cases
+
+### Backend Developer
+- Implement backend logic and backend tests
+- Report contracts, data changes, and risks
+
+### Frontend Developer
+- Implement UI and frontend tests
+- Match the agreed UX/UI definition
+
+### QA
+- Execute validation and integration checks
+- Confirm the feature meets the agreed criteria
+
+## Minimum bootstrap items
+- README with setup instructions
+- .env.example with placeholders
+- .gitignore
+- clear local run command
+- clear test commands
+- environment map for dev, staging, and production
+- deployment target documented
+
+## Note
+The exact framework, folder structure, and deployment details will be added once the pilot mission is defined.
