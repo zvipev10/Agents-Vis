@@ -13,6 +13,9 @@ This document defines what should be prepared before a mission starts and what t
 - Default branch: `main`
 - Vercel production URL: `https://agents-vis.vercel.app`
 - Vercel previews: branches / pull requests create preview deployments
+- Neon is managed through the Vercel integration; preview deployments get matching preview database branches automatically
+- Vercel manages the environment variables for the connected project, so the repo only needs placeholder templates
+- No long-lived staging database is required by default unless the team leader explicitly adds one
 
 ## Team-owned setup
 - Repository structure
@@ -54,7 +57,7 @@ This document defines what should be prepared before a mission starts and what t
 - .gitignore
 - clear local run command
 - clear test commands
-- environment map for dev, staging, and production
+- environment map for dev, preview/QA, and production
 - deployment target documented
 
 ## Note
