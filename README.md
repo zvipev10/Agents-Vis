@@ -40,8 +40,8 @@ That preview has its own URL and is used for QA and review before merging to pro
 
 ## Current status
 
-The repository is bootstrapped and waiting for the first pilot request.
+The repository is bootstrapped and the first development mission is defined in `docs/missions/MISSION_001_VISIBILITY_APPLICATION.md`.
+Mission progress is also checkpointed in `docs/missions/MISSION_001_CHECKPOINT.md`, with the reusable checkpoint/resume protocol documented in `docs/missions/CHECKPOINT_RESUME_PROTOCOL.md`.
 
 ## Next step
-
-Provide the pilot user request and the final stack decisions for the app.
+Provide a future mission using the format in `docs/TEAM_OPERATING_MODEL.md`, and resume long-running work from the latest checkpoint file instead of reconstructing context from memory.

@@ -61,4 +61,5 @@ This document defines what should be prepared before a mission starts and what t
 - deployment target documented
 
 ## Note
-The exact framework, folder structure, and deployment details will be added once the pilot mission is defined.
+The reusable team operating model lives in `docs/TEAM_OPERATING_MODEL.md`.
+The exact framework, folder structure, and deployment details for a specific app will be added once a mission is defined.

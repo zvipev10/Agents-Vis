@@ -21,6 +21,7 @@ venv/
 # Node / web
 node_modules/
 .next/
+.next-build/
 out/
 dist/
 coverage/
@@ -32,3 +33,5 @@ coverage/
 
 # Build artifacts
 build/
+.worktrees/
+tsconfig.tsbuildinfo
