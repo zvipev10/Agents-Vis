@@ -6,9 +6,21 @@ This document defines a reusable Hermes team setup for future app requests and d
 
 Use this team when a future request needs clear ownership, parallel work, and a repeatable delivery process. The team should be able to take a vague product idea, turn it into a mission, implement it, test it, resolve missing pieces, and carry the work through to production with minimal user steering.
 
+The assistant helps prepare the mission, clarify requirements with the user, and report status. The coordinator worker owns mission execution and coordination.
+
 ## Team roles
 
-### Coordinator
+### Assistant
+Supports the user during mission setup and tracking.
+
+Responsibilities:
+- Turn rough requests into a clean mission prompt or brief
+- Help identify missing context before work starts
+- Read checkpoints and handoffs to summarize progress
+- Report blockers, milestones, and status back to the user
+- Stay out of execution ownership so the coordinator worker can lead delivery
+
+### Coordinator Worker
 Owns the mission from start to finish.
 
 Responsibilities:
@@ -16,6 +28,8 @@ Responsibilities:
 - Decide scope, sequencing, and delivery gates
 - Define bootstrap and environment decisions for the mission
 - Set the integration-test strategy
+- Coordinate product, backend, frontend, and QA workstreams
+- Keep the product manager aligned on UX/UI, acceptance criteria, and mission intent
 - Resolve cross-role conflicts
 - Identify missing pieces, hidden dependencies, and unclear requirements
 - Make explicit decisions for any gaps needed to ensure overall mission success
@@ -29,7 +43,7 @@ Responsibilities:
 - Translate loose ideas into concrete requirements
 - Specify UX/UI direction and user flow
 - Identify edge cases and scope boundaries
-- Keep the mission aligned with the intended experience
+- Work with the coordinator worker so product decisions are reflected in the mission packet and checkpoints
 
 ### Backend Developer
 Owns server-side implementation.
@@ -68,6 +82,8 @@ For the current mission, keep the v1 operating structure in place until delivery
 
 For future missions, wrap v1 with checkpoint/resume behavior so work can stop cleanly and restart from the latest handoff when budget, time, or interruptions occur.
 
+The assistant should remain the user-facing prep/status layer, while the coordinator worker should remain the execution owner.
+
 ### Checkpoint/resume protocol
 Every mission should leave behind a durable checkpoint whenever work pauses at a meaningful gate.
 
@@ -82,12 +98,29 @@ Each checkpoint should capture:
 - tests already run and their results
 - the exact next step to resume from
 
-On resume, the coordinator should read the latest checkpoint first, rebuild the todo list from it, and continue from the next unchecked gate instead of reconstructing the mission from memory.
+On resume, the coordinator worker should read the latest checkpoint first, rebuild the todo list from it, and continue from the next unchecked gate instead of reconstructing the mission from memory.
+
+### Context compaction protocol
+When the chat is getting long, the team should assume compaction may happen soon and switch state to files first.
+
+Before context pressure becomes a problem:
+- write or update the latest checkpoint
+- update any finished role handoff files
+- record the current live status in a short summary
+- keep detailed evidence in files, not in chat
+
+After a compaction, recover state in this order:
+1. latest checkpoint
+2. role handoffs
+3. todo list or task board
+4. live process / port / browser evidence if the mission is still executing
+
+Do not rebuild mission state from chat memory when durable artifacts already exist.
 
 ### 1. Intake
 The user provides a request in natural language.
 
-The coordinator converts it into:
+The coordinator worker converts it into:
 - mission goal
 - in-scope / out-of-scope boundaries
 - assumptions
@@ -96,7 +129,7 @@ The coordinator converts it into:
 - delivery order
 
 ### 2. Mission packet
-The coordinator produces a mission packet for the team.
+The coordinator worker produces a mission packet for the team.
 
 The packet should include:
 - short mission summary
@@ -113,10 +146,10 @@ Recommended pattern:
 - Product defines the experience first
 - Backend and Frontend implement against the agreed contract
 - QA prepares validation in parallel with implementation
-- Coordinator keeps alignment and resolves blockers
+- Coordinator worker keeps alignment and resolves blockers
 
 ### 4. Integration and review
-Before delivery, the coordinator verifies:
+Before delivery, the coordinator worker verifies:
 - the pieces fit together
 - the acceptance criteria are actually satisfied
 - the user-facing behavior matches the original request
@@ -130,7 +163,7 @@ The team reports back with:
 - what the next mission should tackle
 - whether the work is ready for preview or production promotion
 
-The coordinator does not stop at identifying gaps; the coordinator is responsible for planning and closing missing pieces needed for overall mission success.
+The coordinator worker does not stop at identifying gaps; the coordinator worker is responsible for planning and closing missing pieces needed for overall mission success.
 
 ## Default decision rules
 
@@ -142,9 +175,9 @@ When a request is underspecified, use these defaults:
 - Prefer one clear source of truth when possible
 - Prefer graceful fallback behavior over hard failure when data is partial
 
-## What the coordinator decides each mission
+## What the coordinator worker decides each mission
 
-The coordinator should explicitly decide:
+The coordinator worker should explicitly decide:
 - exact environment to use
 - local dev assumptions
 - test strategy
@@ -219,18 +252,21 @@ Delivery preference: MVP first.
 ## Recommended operating pattern
 
 For each new mission:
-1. Coordinator creates the mission packet.
-2. Product defines the experience.
-3. Backend defines the contract.
-4. Frontend implements the UI.
-5. QA validates the result.
-6. Coordinator signs off and starts the next mission.
+1. Assistant helps the user refine the request.
+2. Coordinator worker creates the mission packet.
+3. Product defines the experience.
+4. Coordinator worker coordinates product decisions into the mission packet.
+5. Backend defines the contract.
+6. Frontend implements the UI.
+7. QA validates the result.
+8. Coordinator worker signs off and starts the next mission.
 
 ## Definition of done for the team setup
 
 The team setup is ready when:
 - the role boundaries are clear
-- the coordinator owns the mission packet, gap analysis, integration strategy, and production-readiness decisions
+- the coordinator worker owns the mission packet, gap analysis, integration strategy, and production-readiness decisions
 - the product manager owns UX/UI and acceptance criteria
+- the assistant supports mission prep and progress reporting instead of owning execution
 - backend, frontend, and QA each have clear responsibilities
 - future requests can be turned into missions without re-explaining the workflow

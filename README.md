@@ -5,13 +5,15 @@ A fresh repository for a small web application built with a team workflow in Her
 ## Team workflow
 
 Roles are split into:
-- Coordinator
+- Assistant
+- Coordinator Worker
 - Product Manager
 - Backend Developer
 - Frontend Developer
 - QA
 
-The coordinator owns mission planning, integration strategy, and delivery gates.
+The assistant helps prepare the mission and report status.
+The coordinator worker owns mission planning, integration strategy, and delivery gates.
 The product manager owns UX/UI and acceptance criteria.
 The backend and frontend developers implement the feature and tests.
 QA validates the result in the agreed environment.

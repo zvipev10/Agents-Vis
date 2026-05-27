@@ -3,7 +3,7 @@
 ## Mission summary
 Build the first development mission for the team: a private visibility application that lets the user quickly understand what the autonomous agents team did, what is running now, what is completed, and who did what.
 
-This is the team’s first end-to-end mission, so the coordinator must proactively fill missing pieces, make necessary decisions, and carry the work through to production readiness.
+This is the team’s first end-to-end mission, so the coordinator worker must proactively fill missing pieces, make necessary decisions, and carry the work through to production readiness.
 
 ## Goal
 Create a calm, read-only visibility application that opens to the latest mission by default and makes team activity understandable at a glance.
@@ -40,18 +40,18 @@ The user should be able to answer these questions immediately:
 - Cards show the actor/team member first and the action second
 - The interface stays minimal, readable, and private
 - Missing data does not block rendering
-- The coordinator can bring the mission to production without re-explaining the workflow
+- The coordinator worker can bring the mission to production without re-explaining the workflow
 
 ## Assumptions
 - The team already has access to mission data somewhere in the stack
-- Mission records include enough information to determine recency and status, or the coordinator will define the fallback rule
+- Mission records include enough information to determine recency and status, or the coordinator worker will define the fallback rule
 - Private access is handled separately from the UI itself
 - The first version can be small and intentionally limited
 
 ## Coordinator responsibilities
-The coordinator owns the mission from start to finish and must proactively handle missing pieces.
+The coordinator worker owns the mission from start to finish and must proactively handle missing pieces.
 
-The coordinator will:
+The coordinator worker will:
 - turn the request into a mission brief
 - define scope and delivery gates
 - identify missing pieces and hidden dependencies

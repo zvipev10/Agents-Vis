@@ -1,4 +1,4 @@
-# Mission 001 coordinator handoff
+# Mission 001 coordinator worker handoff
 
 ## Mission status
 Resume from the checkpoint and finish the final verification pass for the reconstructed visibility dashboard.
@@ -9,7 +9,7 @@ Resume from the checkpoint and finish the final verification pass for the recons
 - QA checklist: `docs/missions/MISSION_001_QA_CHECKLIST.md`
 - Backend approach: `docs/missions/MISSION_001_BACKEND_APPROACH.md`
 
-## What the coordinator should do first
+## What the coordinator worker should do first
 1. Read the checkpoint and confirm the current checkout state.
 2. Re-run the missing verification steps from the current repo state.
 3. Check for port conflicts before browser smoke validation.

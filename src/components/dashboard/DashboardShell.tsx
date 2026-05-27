@@ -1,8 +1,7 @@
 'use client';
 
 import type { DashboardResponse } from '../../lib/dashboard-types';
-import { MissionHighlightCard } from './MissionHighlightCard';
-import { MissionList } from './MissionList';
+import { MissionTimeline } from './MissionTimeline';
 
 export type DashboardViewState =
   | { status: 'loading' }
@@ -15,34 +14,41 @@ interface DashboardShellProps {
 
 function LoadingState() {
   return (
-    <div className="dashboard-grid" aria-label="Loading dashboard">
-      <div className="panel panel-padding loading-state skeleton" aria-hidden="true">
+    <section className="panel panel-padding timeline-loading" aria-label="Loading mission timeline">
+      <div className="skeleton skeleton--hero" aria-hidden="true">
         <div className="skeleton-line short" />
         <div className="skeleton-line long" />
         <div className="skeleton-line medium" />
       </div>
-      <div className="panel panel-padding loading-state skeleton" aria-hidden="true">
-        <div className="skeleton-line short" />
-        <div className="skeleton-line long" />
-        <div className="skeleton-line medium" />
+      <div className="timeline-loading__stack" aria-hidden="true">
+        <div className="skeleton skeleton--event">
+          <div className="skeleton-line short" />
+          <div className="skeleton-line long" />
+          <div className="skeleton-line medium" />
+        </div>
+        <div className="skeleton skeleton--event">
+          <div className="skeleton-line short" />
+          <div className="skeleton-line long" />
+          <div className="skeleton-line medium" />
+        </div>
       </div>
-    </div>
+    </section>
   );
 }
 
 function EmptyState() {
   return (
-    <section className="panel panel-padding empty-state" role="status" aria-label="Empty dashboard">
-      <h2 className="panel-title">No missions available</h2>
-      <p className="mission-detail">The visibility feed is empty right now. The dashboard will show the latest updated mission here once records exist.</p>
+    <section className="panel panel-padding empty-state" role="status" aria-label="Empty timeline">
+      <h2 className="panel-title">No mission history yet</h2>
+      <p className="mission-detail">The live replay will attach to the latest mission automatically once the event feed starts sending data.</p>
     </section>
   );
 }
 
 function ErrorState({ message }: { message: string }) {
   return (
-    <section className="panel panel-padding error-state" role="alert" aria-label="Dashboard error">
-      <h2 className="panel-title">Dashboard unavailable</h2>
+    <section className="panel panel-padding error-state" role="alert" aria-label="Timeline error">
+      <h2 className="panel-title">Timeline unavailable</h2>
       <p className="mission-detail">{message}</p>
     </section>
   );
@@ -53,25 +59,16 @@ export function DashboardShell({ state }: DashboardShellProps) {
     <main className="app-shell">
       <section className="hero">
         <p className="eyebrow">Private visibility application</p>
-        <h1 className="title">Mission 001</h1>
-        <p className="lede">A calm, read-only view of what the autonomous agents team is doing now, what has completed, and who did each step.</p>
+        <h1 className="title">Mission 002</h1>
+        <p className="lede">A single live replay of the latest mission, with chronological ordering, visible parallel work, and explicit freshness cues.</p>
       </section>
 
       {state.status === 'loading' ? <LoadingState /> : null}
       {state.status === 'error' ? <ErrorState message={state.message} /> : null}
 
       {state.status === 'ready' ? (
-        <section className="dashboard-grid" aria-label="Mission dashboard">
-          <div className="summary-row" aria-label="Dashboard summary">
-            <span className="summary-chip">{state.dashboard.summary.running} running</span>
-            <span className="summary-chip">{state.dashboard.summary.completed} completed</span>
-            <span className="summary-chip">{state.dashboard.summary.total} total</span>
-            <span className="summary-chip">{state.dashboard.source.freshness} source</span>
-          </div>
-
-          {state.dashboard.latestMission ? <MissionHighlightCard mission={state.dashboard.latestMission} /> : <EmptyState />}
-
-          {state.dashboard.missions.length > 1 ? <MissionList missions={state.dashboard.missions.slice(1)} /> : state.dashboard.latestMission ? <MissionList missions={[]} /> : null}
+        <section className="dashboard-grid" aria-label="Mission replay dashboard">
+          {state.dashboard.latestMission ? <MissionTimeline dashboard={state.dashboard} /> : <EmptyState />}
         </section>
       ) : null}
     </main>

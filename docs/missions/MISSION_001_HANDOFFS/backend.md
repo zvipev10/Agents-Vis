@@ -23,4 +23,4 @@ Validate the read-only dashboard data flow from the current main repo state.
 - A note on whether the current API shape is still sufficient for the UI
 
 ## Coordinator dependency
-If the backend finds data-shape mismatch or a missing field, report it back to the coordinator rather than changing the mission scope.
+If the backend finds data-shape mismatch or a missing field, report it back to the coordinator worker rather than changing the mission scope.

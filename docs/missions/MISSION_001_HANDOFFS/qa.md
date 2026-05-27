@@ -21,4 +21,4 @@ Run the final verification pass from the current checkout and confirm the missio
 ## Expected output
 - A concise pass/fail summary
 - Any blockers that prevent production promotion
-- Any last-mile issues that require a coordinator decision
+- Any last-mile issues that require a coordinator worker decision

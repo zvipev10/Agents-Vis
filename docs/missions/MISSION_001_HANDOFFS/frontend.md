@@ -24,4 +24,4 @@ Re-verify the dashboard UI from the current checkout and confirm it still matche
 - Any UI changes needed before production readiness
 
 ## Coordinator dependency
-Do not widen the interface. If the UI needs more data, ask the coordinator to confirm the backend change.
+Do not widen the interface. If the UI needs more data, ask the coordinator worker to confirm the backend change.

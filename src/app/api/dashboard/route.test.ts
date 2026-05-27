@@ -14,6 +14,9 @@ describe('GET /api/dashboard', () => {
     expect(payload.latestMission?.isLatest).toBe(true);
     expect(payload.missions[0]?.id).toBe(payload.latestMission?.id);
     expect(payload.summary.total).toBeGreaterThan(0);
-    expect(payload.source.name).toBe('fixture mission feed');
+    expect(payload.source.name).toBe('repository-backed live source');
+    expect(payload.timeline.mission?.id).toBe(payload.latestMission?.id);
+    expect(payload.timeline.events.length).toBeGreaterThan(0);
+    expect(payload.timeline.freshnessState).not.toBe('empty');
   });
 });

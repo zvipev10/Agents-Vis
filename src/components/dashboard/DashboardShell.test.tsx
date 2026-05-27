@@ -30,25 +30,25 @@ describe('DashboardShell', () => {
   it('shows a loading state before data is ready', () => {
     render(<DashboardShell state={{ status: 'loading' }} />);
 
-    expect(screen.getByLabelText('Loading dashboard')).toBeInTheDocument();
+    expect(screen.getByLabelText('Loading mission timeline')).toBeInTheDocument();
   });
 
-  it('renders the latest mission first in a calm read-only layout', () => {
+  it('renders the live replay timeline for the latest mission only', () => {
     render(<DashboardShell state={{ status: 'ready', dashboard: readyDashboard }} />);
 
-    expect(screen.getByText('Private visibility application')).toBeInTheDocument();
+    expect(screen.getByText('Mission 002')).toBeInTheDocument();
+    expect(screen.getByRole('heading', { name: 'Last mission only' })).toBeInTheDocument();
+    expect(screen.getByLabelText('Latest mission timeline')).toBeInTheDocument();
     expect(screen.getByRole('heading', { name: 'Ari, Coordinator reframed the delivery gates' })).toBeInTheDocument();
-    expect(screen.getByText('Latest mission')).toBeInTheDocument();
-    expect(screen.getByText('1 running')).toBeInTheDocument();
-    expect(screen.getByText('1 completed')).toBeInTheDocument();
-    expect(screen.getAllByRole('article')).toHaveLength(2);
+    expect(screen.getByText('Parallel workstream')).toBeInTheDocument();
+    expect(screen.queryByText('Mission 001')).not.toBeInTheDocument();
     expect(screen.queryByRole('button')).not.toBeInTheDocument();
   });
 
   it('shows an empty state when there are no missions', () => {
     render(<DashboardShell state={{ status: 'ready', dashboard: buildDashboardResponse([]) }} />);
 
-    expect(screen.getByText('No missions available')).toBeInTheDocument();
-    expect(screen.getByText('The visibility feed is empty right now. The dashboard will show the latest updated mission here once records exist.')).toBeInTheDocument();
+    expect(screen.getByText('No mission history yet')).toBeInTheDocument();
+    expect(screen.getByText('The live replay will attach to the latest mission automatically once the event feed starts sending data.')).toBeInTheDocument();
   });
 });
