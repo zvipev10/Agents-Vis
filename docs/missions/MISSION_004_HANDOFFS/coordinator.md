@@ -2,7 +2,7 @@
 
 ## Current mission state
 Mission 004 is the live-truth ingestion and storytelling mission.
-The mission is now complete: the live source was refreshed in the repo, production is ingesting the refreshed feed, and the single timeline still shows the latest mission with freshness lag visible.
+The mission is now complete: the live source was refreshed again in the repo with a new verification event, production is ingesting the refreshed feed, and the single timeline still shows the latest mission with freshness lag visible.
 
 ## What is done
 - Mission packet is defined
@@ -10,7 +10,7 @@ The mission is now complete: the live source was refreshed in the repo, producti
 - The release goal is explicit: updated truth plus clearer story, not just a frozen production snapshot
 - The writing contract is defined: updates should say what changed, who changed it, why it matters, and what comes next when relevant
 - The repo-backed live source snapshot now includes Mission 004 as the latest mission
-- Backend and frontend implementation work has started and is now reflected in the live source refresh
+- Backend and frontend implementation work is reflected in the live source refresh and the follow-up verification event
 - Repo checks are green: tests, typecheck, and build pass
 - This run revalidated the local repo successfully with `npm test`, `npm run typecheck`, and `npm run build`
 - This run rechecked production and confirmed the deployed app serves Mission 004 data from the refreshed canonical live source
@@ -35,9 +35,9 @@ The mission is now complete: the live source was refreshed in the repo, producti
 - Dev server may still be used for local verification
 - Production verification must happen on the deployed app
 - Production is reachable and returns 200, and the live payload now reflects Mission 004 from the refreshed canonical live source
-- Local runtime smoke verified that the app can poll the real HTTPS JSON feed from `raw.githubusercontent.com` and still render Mission 004
+- Local verification now pins the route test to `AGENTS_VIS_DASHBOARD_SOURCE_FILE=src/lib/dashboard-live-source.json` so the checkout matches the shipped source
 - Production smoke this run:
-  - `GET https://agents-vis.vercel.app/api/missions/latest` → 200, Mission 004 payload, `freshnessState: delayed`
+  - `GET https://agents-vis.vercel.app/api/missions/latest` → 200, Mission 004 payload, `eventCount: 7`, `freshnessState: delayed`
   - `GET https://agents-vis.vercel.app/api/dashboard` → 200, Mission 004 payload, delayed freshness reported
 - Browser title: `Mission 004`
 - Markdown handoff updated and the matching PDF artifact was regenerated in `docs/missions/pdfs/`

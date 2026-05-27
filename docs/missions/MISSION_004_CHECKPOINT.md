@@ -1,22 +1,23 @@
 # Mission 004 Checkpoint
 
-Generated: 2026-05-27T15:45:27Z
+Generated: 2026-05-27T16:46:23Z
 
 ## Mission
 Mission 004: Live Truth Ingestion and Storytelling
 
 ## Current state
-Mission 004 is complete. The canonical live JSON source was refreshed in the repo, production now ingests the refreshed feed, and the deployed app shows Mission 004 with freshness lag visible instead of hidden.
+Mission 004 is complete. The canonical live JSON source was refreshed again in the repo with a new Mission 004 verification event, production ingests the refreshed feed, and the deployed app shows Mission 004 with freshness lag visible instead of hidden.
 
 ## Current production smoke from this run:
-- `GET https://agents-vis.vercel.app/api/missions/latest` → Mission 004, `freshnessState: delayed`, `lagMs: 520715`
-- `GET https://agents-vis.vercel.app/api/dashboard` → Mission 004, delayed freshness still visible, `lagMs: 528992`
+- `GET https://agents-vis.vercel.app/api/missions/latest` → Mission 004, `eventCount: 7`, `freshnessState: delayed`, `lagMs: 586166`
+- `GET https://agents-vis.vercel.app/api/dashboard` → Mission 004, delayed freshness still visible, `lagMs: 588161`
 - Browser title: `Mission 004`
 
-## Current local live-source smoke from this run:
+## Current local verification from this run:
 - `AGENTS_VIS_DASHBOARD_SOURCE_FILE=src/lib/dashboard-live-source.json`
-- `GET http://127.0.0.1:3010/api/missions/latest` → Mission 004, `freshnessState: delayed`, `lagMs: 437172`, source `canonical production live source`
-- `GET http://127.0.0.1:3010/api/dashboard` → Mission 004, delayed freshness visible, source `canonical production live source`
+- `npm test` passed with the route test pinned to the repo-backed live source file
+- `npm run typecheck` passed
+- `npm run build` passed
 
 ## Latest known mission scope
 - Keep the single latest-mission timeline experience
@@ -30,15 +31,15 @@ Mission 004 is complete. The canonical live JSON source was refreshed in the rep
 - Mission 004 scope has been defined
 - Product, backend, frontend, QA, and coordinator responsibilities are written down
 - The Mission 004 writing contract is defined: updates should communicate what changed, who changed it, why it matters, and what comes next when relevant
-- The canonical live JSON source was refreshed with Mission 004 as the latest mission and a clearer story update
+- The canonical live JSON source was refreshed with Mission 004 as the latest mission and a clearer story update, then refreshed again with a new verification event
 - The backend can poll `AGENTS_VIS_DASHBOARD_SOURCE_URL` and also falls back to the verified raw GitHub JSON feed
 - Tests, typecheck, and build pass in the repo
 - Local verification from this run is green: `npm test`, `npm run typecheck`, and `npm run build` all passed
 - Mission 004 PDFs were regenerated locally with ReportLab so the repo-hosted artifacts match the updated markdown
 - The refreshed live source was committed and pushed to `main`
-- Live production smoke confirms `https://agents-vis.vercel.app/api/missions/latest` returns Mission 004 data, `https://agents-vis.vercel.app/api/dashboard` returns Mission 004, and the page title says Mission 004
+- Live production smoke confirms `https://agents-vis.vercel.app/api/missions/latest` returns Mission 004 data with 7 events, `https://agents-vis.vercel.app/api/dashboard` returns Mission 004, and the page title says Mission 004
 - Production now returns Mission 004 from the refreshed canonical live source with delayed freshness visible
-- Local runtime smoke confirms the app can poll the real HTTPS JSON source at `https://raw.githubusercontent.com/zvipev10/Agents-Vis/main/src/lib/dashboard-live-source.json` and still render Mission 004 with explicit delayed freshness
+- The route test now pins to the repo-backed live source file so local verification tracks the shipped source instead of the remote feed
 - The latest production smoke in this run returned Mission 004 with visible delayed freshness and `lagMs` in the live range
 
 ## What remains

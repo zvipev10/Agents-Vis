@@ -7,6 +7,7 @@
 - This run revalidated local quality gates and produced live production smoke evidence
 - The repo-backed live source snapshot now includes Mission 004 as the latest mission
 - Production smoke shows the deployed app serving Mission 004 from the refreshed canonical live source snapshot
+- The refreshed source now includes a new Mission 004 verification event, and the API reports 7 events
 
 ## QA focus
 - Verify the production URL opens successfully
@@ -30,8 +31,8 @@
 - Production URL opens successfully with HTTP 200
 - Production API returns the Mission 004 payload, and the title also reflects Mission 004
 - Live API smoke from this run:
-  - `GET https://agents-vis.vercel.app/api/missions/latest` → 200, Mission 004 payload, `freshnessState: delayed`
+  - `GET https://agents-vis.vercel.app/api/missions/latest` → 200, Mission 004 payload, `eventCount: 7`, `freshnessState: delayed`
   - `GET https://agents-vis.vercel.app/api/dashboard` → 200, delayed freshness reported
 - Browser title: `Mission 004`
-- Local smoke in this run verified the app can poll the live GitHub JSON feed and still render Mission 004 with explicit delayed freshness
+- Local verification in this run pinned the route test to the repo-backed live source file and passed with the refreshed Mission 004 payload
 - Markdown handoff updated and the matching PDF artifact was regenerated in `docs/missions/pdfs/`

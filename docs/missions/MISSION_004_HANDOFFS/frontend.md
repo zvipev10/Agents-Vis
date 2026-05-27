@@ -6,7 +6,7 @@
 - The app keeps only the latest mission timeline visible
 - The frontend renders the clearer story contract and preserves chronology, parallel lanes, and freshness cues
 - The repo-backed live source snapshot now includes Mission 004 as the latest mission
-- The production UI title and rendered story now follow Mission 004 from the refreshed canonical live source snapshot
+- The live source was refreshed again with a new verification event so the timeline story stays current
 
 ## Current frontend behavior target
 - Keep the one-timeline layout
@@ -24,8 +24,8 @@
 - The UI should highlight who did what, why it mattered, and what changed next
 - The frontend should keep the timeline readable as the live source changes
 - The browser title follows the latest mission, so the visible page now says Mission 004
-- Freshness lag remains visible in the UI and should not be hidden
-- Local smoke against the real HTTPS JSON feed confirms the timeline renders Mission 004 with delayed freshness
+- Local verification now uses the repo-backed live source file override in the route test, so the frontend view tracks the shipped source
+- Production smoke confirms the timeline renders Mission 004 with delayed freshness
 
 ## Next frontend step
 Keep the one-timeline layout readable and preserve the freshness state so lag remains visible in the UI.
