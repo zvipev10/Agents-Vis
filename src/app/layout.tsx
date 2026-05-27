@@ -1,7 +1,7 @@
 import './globals.css';
 
 export const metadata = {
-  title: 'Mission 003',
+  title: 'Agents-Vis',
   description: 'Private read-only visibility for the autonomous agents team.',
 };
 
