@@ -3,10 +3,10 @@
 ## Completed
 - Mission 004 is defined as the live-truth and story-refactor mission
 - The UI remains read-only and single-view
-- The app should keep only the latest mission timeline visible
-- The frontend implementation already renders the clearer story contract and preserves chronology, parallel lanes, and freshness cues
+- The app keeps only the latest mission timeline visible
+- The frontend renders the clearer story contract and preserves chronology, parallel lanes, and freshness cues
 - The repo-backed live source snapshot now includes Mission 004 as the latest mission
-- The production UI title and rendered story now follow Mission 004 from the canonical live source snapshot
+- The production UI title and rendered story now follow Mission 004 from the refreshed canonical live source snapshot
 
 ## Current frontend behavior target
 - Keep the one-timeline layout
@@ -16,16 +16,17 @@
 - Keep the UI consumer-friendly and avoid turning it into a second summary dashboard
 - Continue rendering the remote-source payload without changing the visible single-timeline experience
 - Document each frontend step in a PDF artifact stored in the repo
-- This run revalidated the frontend locally as part of the passing test suite, typecheck, and build; the mission PDFs remain in `docs/missions/pdfs/`
+- This run revalidated the frontend locally as part of the passing test suite, typecheck, and build; the mission PDFs were regenerated in `docs/missions/pdfs/`
 
 ## Story refactor target
 - The frontend should render the story the agents produce, not invent a new summary layer
 - The writing contract should make each update understandable in context
 - The UI should highlight who did what, why it mattered, and what changed next
 - The frontend should keep the timeline readable as the live source changes
-- The browser title now follows the latest mission, so the visible page no longer says Mission 003
+- The browser title follows the latest mission, so the visible page now says Mission 004
 - Freshness lag remains visible in the UI and should not be hidden
-- Local smoke against the real HTTPS JSON feed confirms the timeline still renders Mission 004 with the same stale indicator
+- Local smoke against the real HTTPS JSON feed confirms the timeline renders Mission 004 with delayed freshness
 
 ## Next frontend step
-Keep the one-timeline layout readable and preserve the stale/freshness state so lag remains visible in the UI.
+Keep the one-timeline layout readable and preserve the freshness state so lag remains visible in the UI.
+- Markdown handoff updated and the matching PDF artifact was regenerated in `docs/missions/pdfs/`
