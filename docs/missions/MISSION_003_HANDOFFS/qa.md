@@ -1,17 +1,24 @@
 # Mission 003 QA Handoff
 
 ## Completed
-- Mission 003 has a clear production goal
-- The QA checklist now focuses on the deployed production app, not just local smoke checks
+- QA smoke now covers the deployed production app, not just local checks
+- Production API and production UI were both verified after the final release push
 
-## What QA should verify
-- Production URL is reachable
+## Verified in production
+- Production URL reachable: `https://agents-vis.vercel.app`
 - Latest mission only is shown
 - Ordering is stable and chronological
-- Parallel activity is visible as parallel
-- Freshness / stale / lag states are visible
+- Parallel activity remains visible as parallel
+- Freshness / stale / lag states remain visible
 - The app stays read-only
 - Production API and production UI match the expected contract
 
+## Evidence
+- API: `GET /api/missions/latest` returned `200`
+- API source name: `canonical production live source`
+- API mission id: `mission-003`
+- Root page title: `Mission 003`
+- Root HTML includes `Mission 003 replay`
+
 ## Next QA step
-Run smoke checks on the deployed production app and record any blocker that prevents release readiness.
+No QA blocker remains for Mission 003. Future QA runs should be regression-only unless production changes.

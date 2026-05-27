@@ -1,30 +1,29 @@
 # Mission 003 Coordinator Handoff
 
 ## Current mission state
-Mission 003 is defined as the production-delivery follow-up to Mission 002.
-Mission 002 proved the repo-backed milestone; Mission 003 must carry the app through production readiness and live production verification.
+Mission 003 is complete.
+The production deployment is live, the canonical source is bundled into the server build, and live production smoke checks passed.
 
-## What is done
-- Mission packet is defined
-- Backend, frontend, QA, and coordinator responsibilities are declared
-- The release goal is now explicit: production application, not just repo-backed operational state
+## What was done
+- Confirmed the local build and test suite were green
+- Pushed the canonical production source into the repo
+- Fixed the server-side source loader so production uses the bundled JSON source instead of a repo-docs file
+- Fixed the UI so the mission labels are derived from the live mission ID instead of a hardcoded Mission 002 label
+- Verified the production API and production UI against the live deployment
+
+## Live production evidence
+- Production URL: `https://agents-vis.vercel.app`
+- API: `GET /api/missions/latest` returns `200`
+- API source name: `canonical production live source`
+- API mission id: `mission-003`
+- Root page title: `Mission 003`
+- Root HTML includes: `Mission 003 replay`
 
 ## What remains
-- Decide the canonical production live source if it is not already connected
-- Assign concrete backend, frontend, and QA tasks
-- Deploy and verify the production application
-- Confirm the release gate or record the blocker
+- No Mission 003 blockers remain
+- Only regression monitoring remains, if desired
 
 ## Coordinator instructions
-- Keep the user-facing experience to one live timeline only
-- Do not add a second summary view
-- Preserve explicit stale/lag indicators
-- Keep the checkpoint updated after each meaningful milestone
-- Use the checkpoint and handoffs as the source of truth for future resumption
-- Treat Mission 003 as incomplete until production deployment and production smoke verification are done
-- Send a short update after every meaningful step, not only at the end of a run
-- Each update should say who worked and what the next step is
-
-## Live runtime note
-- Dev server may still be used for local verification
-- Production verification must happen on the deployed app
+- Keep the checkpoint and handoffs as the source of truth
+- Treat Mission 003 as closed unless production regresses
+- Keep stale/lag visibility intact if future changes touch the dashboard

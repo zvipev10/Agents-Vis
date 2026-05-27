@@ -1,13 +1,13 @@
 # Mission 003 Checkpoint
 
-Generated: 2026-05-27T09:30:00+00:00
+Generated: 2026-05-27T10:26:02Z
 
 ## Mission
 Mission 003: Production Application Delivery
 
 ## Current state
-Mission 003 is newly defined and not yet executed.
-The goal is to take the Mission 002 app from the repository-backed milestone to a real production application with a canonical production live source and a verified production deployment.
+Mission 003 is complete.
+The app is live in production at https://agents-vis.vercel.app, the canonical production live source is bundled into the server build, and both the production API and production UI were smoke-tested successfully.
 
 ## Latest known mission scope
 - Keep the single latest-mission timeline experience
@@ -17,17 +17,21 @@ The goal is to take the Mission 002 app from the repository-backed milestone to 
 - Keep the app read-only and consumer-friendly
 
 ## What is done
-- Mission 003 scope has been defined
-- Product, backend, frontend, QA, and coordinator responsibilities are now written down
+- The canonical production live source is now bundled in `src/lib/dashboard-live-source.json`
+- `loadDashboardDataSource()` now prefers the bundled live source and still supports env overrides
+- The root page and timeline labels now derive from the live mission ID instead of a hardcoded Mission 002 label
+- Tests were updated to match the live-data labels and source name
+- `npm test` passes
+- `npm run build` passes
+- Production API smoke: `GET /api/missions/latest` returns `200` with `source.name = canonical production live source`, `mission.id = mission-003`, `eventCount = 5`, `isStale = true`
+- Production UI smoke: root page title shows `Mission 003`, and the rendered HTML contains `Mission 003 replay` and the canonical source label
 
 ## What remains
-- Assign concrete worker tasks for production source, deployment, frontend verification, and QA
-- Decide the canonical production live source if it is not already available
-- Deploy the app to production and smoke test the live URL
-- Update the checkpoint after each meaningful milestone
+- No mission-blocking work remains for Mission 003
+- Future runs should only watch for regressions or new production issues
 
 ## Resume instruction
-Start by reading this checkpoint, the mission packet, and the role handoffs. Then assign the first concrete worker task needed to make the app production-ready.
+If Mission 003 needs to be revisited later, start by checking the live production URL and API first. If both still match the canonical source and Mission 003 content, treat the mission as closed.
 
 ## Notes for the next run
 - Do not add a second dashboard view
