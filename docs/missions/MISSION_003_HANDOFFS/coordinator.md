@@ -2,7 +2,7 @@
 
 ## Current mission state
 Mission 003 is complete.
-The production deployment is live, the canonical source is bundled into the server build, and live production smoke checks passed.
+The production deployment is live, the canonical source is bundled into the server build, and live production smoke checks passed. A page-title regression to the generic title was fixed, pushed, and reverified.
 
 ## What was done
 - Confirmed the local build and test suite were green
@@ -18,6 +18,7 @@ The production deployment is live, the canonical source is bundled into the serv
 - API mission id: `mission-003`
 - Root page title: `Mission 003`
 - Root HTML includes: `Mission 003 replay`
+- Revalidated after commit `32064fc` and redeploy propagation
 
 ## What remains
 - No Mission 003 blockers remain

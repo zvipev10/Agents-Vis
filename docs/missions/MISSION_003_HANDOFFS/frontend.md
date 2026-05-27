@@ -15,6 +15,7 @@
 - `npm test` passed
 - `npm run build` passed
 - Production UI smoke passed against `https://agents-vis.vercel.app`
+- Production title was rechecked after the title fix and remained `Mission 003`
 
 ## Next frontend step
 No frontend follow-up is required for Mission 003 unless production regresses or the live data shape changes.

@@ -1,13 +1,13 @@
 # Mission 003 Checkpoint
 
-Generated: 2026-05-27T10:26:02Z
+Generated: 2026-05-27T10:59:25Z
 
 ## Mission
 Mission 003: Production Application Delivery
 
 ## Current state
 Mission 003 is complete.
-The app is live in production at https://agents-vis.vercel.app, the canonical production live source is bundled into the server build, and both the production API and production UI were smoke-tested successfully.
+The app is live in production at https://agents-vis.vercel.app, the canonical production live source is bundled into the server build, and both the production API and production UI were smoke-tested successfully. The page-title regression was fixed, pushed, and revalidated.
 
 ## Latest known mission scope
 - Keep the single latest-mission timeline experience
@@ -25,6 +25,7 @@ The app is live in production at https://agents-vis.vercel.app, the canonical pr
 - `npm run build` passes
 - Production API smoke: `GET /api/missions/latest` returns `200` with `source.name = canonical production live source`, `mission.id = mission-003`, `eventCount = 5`, `isStale = true`
 - Production UI smoke: root page title shows `Mission 003`, and the rendered HTML contains `Mission 003 replay` and the canonical source label
+- Revalidation after push `32064fc`: production title remained `Mission 003`
 
 ## What remains
 - No mission-blocking work remains for Mission 003

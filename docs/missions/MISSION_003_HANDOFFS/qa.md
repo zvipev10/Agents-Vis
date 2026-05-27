@@ -19,6 +19,7 @@
 - API mission id: `mission-003`
 - Root page title: `Mission 003`
 - Root HTML includes `Mission 003 replay`
+- Revalidated after the page-title redeploy and found no remaining regression
 
 ## Next QA step
 No QA blocker remains for Mission 003. Future QA runs should be regression-only unless production changes.
