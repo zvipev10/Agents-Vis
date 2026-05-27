@@ -2,6 +2,16 @@
 
 import type { DashboardResponse, MissionCard as MissionCardData } from '../../lib/dashboard-types';
 
+function missionLabelFromId(id: string | null | undefined): string {
+  if (!id) {
+    return 'Mission replay';
+  }
+
+  const match = /^mission-(.+)$/.exec(id);
+  return match ? `Mission ${match[1]}` : 'Mission replay';
+}
+
+
 interface MissionTimelineProps {
   dashboard: DashboardResponse;
 }
@@ -109,12 +119,13 @@ export function MissionTimeline({ dashboard }: MissionTimelineProps) {
   const latestMission = dashboard.latestMission;
   const freshness = freshnessTone(dashboard);
   const lag = lagMinutes(dashboard.generatedAt, dashboard.source.updatedAt);
+  const replayLabel = latestMission ? `${missionLabelFromId(latestMission.id)} replay` : 'Mission replay';
 
   return (
     <section className="panel panel-padding mission-timeline" aria-label="Latest mission timeline">
       <div className="mission-timeline__header">
         <div className="mission-timeline__headline-group">
-          <p className="eyebrow">Mission 002 replay</p>
+          <p className="eyebrow">{replayLabel}</p>
           <h2 className="panel-title">Last mission only</h2>
           <p className="mission-detail">
             One chronological feed for the latest mission. Events remain in order, concurrent work can fan out into lanes,

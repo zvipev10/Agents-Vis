@@ -18,6 +18,8 @@ Keep the current read-only response shape stable, but replace the repository-bac
 
 ## Production source decision
 The backend should use a canonical production source, not the repo-backed milestone file, for the final mission.
+The team may choose the ingestion method that best fits the real source: webhook push, polling, scheduled sync, or another safe path.
+Webhook is optional, not required.
 If the real store is not yet available, that gap is a blocker for Mission 003 completion.
 
 ## Verification targets

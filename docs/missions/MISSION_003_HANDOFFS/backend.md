@@ -17,6 +17,7 @@
 - The final release should not depend on the repository-backed milestone file
 - The production live source must be explicit and verifiable
 - If no canonical production source exists yet, that is the first backend blocker to solve
+- The team may choose webhook push, polling, scheduled sync, or another ingestion path; webhook is not required
 
 ## Next backend step
 Confirm or implement the canonical production live source, then verify the API response shape against that source in production and add or update tests for the source switch.

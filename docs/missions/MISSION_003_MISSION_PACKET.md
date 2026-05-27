@@ -11,7 +11,7 @@ Keep the single live timeline experience. Do not add a second dashboard view. Ma
 ## Scope in
 - One primary chronological timeline for the latest mission only
 - Production deployment of the app
-- Production-safe live data source or live mission feed
+- Production-safe live data source or live mission feed, with the backend team choosing the safest practical ingestion path
 - Stable read-only API contract
 - Explicit freshness / stale / lag indicators
 - Full-history replay remains visible and scrollable
@@ -46,3 +46,4 @@ Keep the single live timeline experience. Do not add a second dashboard view. Ma
 - Is the production live source a real external event store, a production database, or another canonical feed?
 - What is the exact release gate for marking the app production-ready?
 - What smoke checks should be mandatory before release is considered done?
+- If the source is external, is webhook push available, or should the team use polling / sync instead?

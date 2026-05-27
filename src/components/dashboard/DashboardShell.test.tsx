@@ -36,12 +36,12 @@ describe('DashboardShell', () => {
   it('renders the live replay timeline for the latest mission only', () => {
     render(<DashboardShell state={{ status: 'ready', dashboard: readyDashboard }} />);
 
-    expect(screen.getByText('Mission 002')).toBeInTheDocument();
+    expect(screen.getByText('Mission 001')).toBeInTheDocument();
     expect(screen.getByRole('heading', { name: 'Last mission only' })).toBeInTheDocument();
     expect(screen.getByLabelText('Latest mission timeline')).toBeInTheDocument();
     expect(screen.getByRole('heading', { name: 'Ari, Coordinator reframed the delivery gates' })).toBeInTheDocument();
     expect(screen.getByText('Parallel workstream')).toBeInTheDocument();
-    expect(screen.queryByText('Mission 001')).not.toBeInTheDocument();
+    expect(screen.queryByText('Mission 002')).not.toBeInTheDocument();
     expect(screen.queryByRole('button')).not.toBeInTheDocument();
   });
 
