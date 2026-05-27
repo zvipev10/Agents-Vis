@@ -21,7 +21,7 @@
 - The writing contract should make each update understandable in context
 - The UI should highlight who did what, why it mattered, and what changed next
 - The frontend should keep the timeline readable as the live source changes
-- Production still needs the updated source or redeploy before the improved story can be validated live
+- The browser title now follows the latest mission, so the visible page no longer says Mission 003
 
 ## Next frontend step
-Define the story-writing contract with the coordinator, then update the presentation so the clearer agent-written records are displayed without losing chronology, freshness, or parallel structure.
+Keep the one-timeline layout readable and preserve the stale/freshness state so lag remains visible in the UI.

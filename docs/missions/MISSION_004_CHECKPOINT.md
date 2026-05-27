@@ -1,12 +1,12 @@
 # Mission 004 Checkpoint
 
-Generated: 2026-05-27T12:23:00Z
+Generated: 2026-05-27T12:40:00Z
 
 ## Mission
 Mission 004: Live Truth Ingestion and Storytelling
 
 ## Current state
-Mission 004 is in progress. The repo now carries a Mission 004 live-source snapshot and the local gates are green, but the deployed production app is still serving the Mission 003 snapshot until the updated source is deployed.
+Mission 004 is in progress. The repo carries a Mission 004 live-source snapshot, the local gates are green, and the latest main-branch push has reached production. The live API now returns Mission 004 and the browser title says Mission 004. Freshness is still visibly stale, so lag remains explicit.
 
 ## Latest known mission scope
 - Keep the single latest-mission timeline experience
@@ -24,15 +24,14 @@ Mission 004 is in progress. The repo now carries a Mission 004 live-source snaps
 - Backend and frontend implementation work has started
 - Tests, typecheck, and build currently pass in the repo
 - Local verification from this run is green: `npm test`, `npm run typecheck`, and `npm run build` all passed
-- Live production smoke from this run still confirms `https://agents-vis.vercel.app/api/missions/latest` returns Mission 003 data and `https://agents-vis.vercel.app/api/dashboard` still reports stale freshness
+- Mission 004 PDFs were regenerated locally with ReportLab so the repo-hosted artifacts match the updated markdown
+- The main branch was pushed with the live-source snapshot and the dynamic title fix
+- Live production smoke now confirms `https://agents-vis.vercel.app/api/missions/latest` returns Mission 004 data, `https://agents-vis.vercel.app/api/dashboard` returns Mission 004, and the page title says Mission 004
 
 ## What remains
-- Redeploy production so the updated repo-backed live source becomes visible on the live URL
-- Or provision a canonical external JSON source and point production at it with `AGENTS_VIS_DASHBOARD_SOURCE_URL`
-- Confirm the safest ingestion method for the real source
-- Keep the frontend story presentation aligned with the latest source
-- Update the checkpoint after each meaningful milestone
-- The blocker is now live deployment / external source wiring, not missing repo data
+- Keep the stale freshness visible instead of hiding lag
+- Decide whether the source should get a fresh ingest update or stay on the current lagged snapshot
+- Keep the production deployment path and any external live-source wiring documented for the next run
 
 ## Resume instruction
 Start by reading this checkpoint, the mission packet, and the role handoffs. Then assign the first concrete worker task needed to make the app show updated truth with a clearer story.
@@ -41,12 +40,12 @@ Start by reading this checkpoint, the mission packet, and the role handoffs. The
 - Coordinator verified the repo, local tests, and production smoke
 - The repo-backed live source now includes Mission 004 as the latest mission
 - Backend/frontend code is already wired for an external source via `AGENTS_VIS_DASHBOARD_SOURCE_URL`
-- QA evidence still shows the deployed app on Mission 003, so the next step is redeploying the updated source or wiring an external live source
+- QA evidence now shows the deployed app on Mission 004, with stale freshness still visible
 
 ## Notes for the next run
 - Do not add a second dashboard view
 - Do not hide lag or stale states
 - Preserve parallel sequencing
 - Keep status tied to live evidence and production checks
-- Production smoke currently reaches the deployed app, but the live payload is still Mission 003 and stale
+- Production smoke currently reaches the deployed app, and the live payload is Mission 004 with stale freshness visible
 - Send short updates after every meaningful step
