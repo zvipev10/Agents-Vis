@@ -1,5 +1,5 @@
 {
-  "sourceName": "repository-backed live source",
+  "sourceName": "canonical production live source",
   "records": [
     {
       "id": "mission-001",
@@ -36,11 +36,11 @@
       "id": "mission-004",
       "title": "Live truth ingestion and storytelling",
       "status": "running",
-      "updatedAt": "2026-05-27T12:22:00.000Z",
+      "updatedAt": "2026-05-27T16:36:08.000Z",
       "actorName": "Ari",
       "actorRole": "Coordinator",
-      "action": "validated the live source path and kept the release gate open",
-      "detail": "The app can already read a remote JSON source, but production still needs the canonical source value before the deployed timeline can move off Mission 003."
+      "action": "reconfirmed the live JSON source refresh keeps the latest mission current",
+      "detail": "The deployed app can still poll the canonical remote feed, preserve the single timeline, and keep lag visible instead of hiding it."
     }
   ],
   "eventRecords": [
@@ -52,7 +52,7 @@
       "action": "opened Mission 002 and confirmed the replay scope",
       "timestamp": "2026-05-26T07:52:00.000Z",
       "sequenceIndex": 1,
-      "sourceLabel": "repository-backed live source"
+      "sourceLabel": "canonical production live source"
     },
     {
       "id": "mission-003-event-002",
@@ -62,7 +62,7 @@
       "action": "mapped the read-only event contract",
       "timestamp": "2026-05-26T07:53:00.000Z",
       "sequenceIndex": 2,
-      "sourceLabel": "repository-backed live source",
+      "sourceLabel": "canonical production live source",
       "parallelGroupId": "mission-003-parallel-01",
       "parallelOrder": 0,
       "parallelSize": 2
@@ -75,7 +75,7 @@
       "action": "drafted the live timeline rendering states",
       "timestamp": "2026-05-26T07:53:00.000Z",
       "sequenceIndex": 3,
-      "sourceLabel": "repository-backed live source",
+      "sourceLabel": "canonical production live source",
       "parallelGroupId": "mission-003-parallel-01",
       "parallelOrder": 1,
       "parallelSize": 2
@@ -88,7 +88,7 @@
       "action": "checked ordering, lag, and stale-state handling",
       "timestamp": "2026-05-26T07:54:00.000Z",
       "sequenceIndex": 4,
-      "sourceLabel": "repository-backed live source"
+      "sourceLabel": "canonical production live source"
     },
     {
       "id": "mission-003-event-005",
@@ -98,7 +98,7 @@
       "action": "updated the mission",
       "timestamp": "2026-05-26T07:55:00.000Z",
       "sequenceIndex": 5,
-      "sourceLabel": "repository-backed live source",
+      "sourceLabel": "canonical production live source",
       "freshness": "partial"
     },
     {
@@ -109,7 +109,7 @@
       "action": "opened Mission 004 and clarified the mission brief",
       "timestamp": "2026-05-27T12:10:00.000Z",
       "sequenceIndex": 1,
-      "sourceLabel": "repository-backed live source"
+      "sourceLabel": "canonical production live source"
     },
     {
       "id": "mission-004-event-002",
@@ -119,7 +119,7 @@
       "action": "confirmed the remote JSON source path and kept the API read-only",
       "timestamp": "2026-05-27T12:14:00.000Z",
       "sequenceIndex": 2,
-      "sourceLabel": "repository-backed live source",
+      "sourceLabel": "canonical production live source",
       "parallelGroupId": "mission-004-parallel-01",
       "parallelOrder": 0,
       "parallelSize": 2
@@ -132,7 +132,7 @@
       "action": "reshaped the single timeline so the story reads clearly",
       "timestamp": "2026-05-27T12:14:00.000Z",
       "sequenceIndex": 3,
-      "sourceLabel": "repository-backed live source",
+      "sourceLabel": "canonical production live source",
       "parallelGroupId": "mission-004-parallel-01",
       "parallelOrder": 1,
       "parallelSize": 2
@@ -145,7 +145,7 @@
       "action": "reran the local gates and confirmed production still serves Mission 003",
       "timestamp": "2026-05-27T12:18:00.000Z",
       "sequenceIndex": 4,
-      "sourceLabel": "repository-backed live source"
+      "sourceLabel": "canonical production live source"
     },
     {
       "id": "mission-004-event-005",
@@ -155,8 +155,29 @@
       "action": "recorded the remaining blocker and the next live-source step",
       "timestamp": "2026-05-27T12:22:00.000Z",
       "sequenceIndex": 5,
-      "sourceLabel": "repository-backed live source",
+      "sourceLabel": "canonical production live source",
       "freshness": "partial"
+    },
+    {
+      "id": "mission-004-event-006",
+      "missionId": "mission-004",
+      "actorName": "Ari",
+      "actorRole": "Coordinator",
+      "action": "confirmed the refreshed live feed keeps the latest mission visible in one timeline",
+      "timestamp": "2026-05-27T15:36:00.000Z",
+      "sequenceIndex": 6,
+      "sourceLabel": "canonical production live source"
+    },
+    {
+      "id": "mission-004-event-007",
+      "missionId": "mission-004",
+      "actorName": "Ari",
+      "actorRole": "Coordinator",
+      "action": "re-smoked production and confirmed Mission 004 still displays through the live source",
+      "timestamp": "2026-05-27T16:36:08.000Z",
+      "sequenceIndex": 7,
+      "sourceLabel": "canonical production live source",
+      "detail": "The deployed app still serves Mission 004, freshness lag remains visible, and the canonical feed stays live."
     }
   ]
 }

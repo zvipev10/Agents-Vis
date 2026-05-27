@@ -2,27 +2,42 @@ import { describe, expect, it } from 'vitest';
 import { GET } from './route';
 import { assertMissionTimelineResponse } from '../../../../lib/dashboard-types';
 
+const SOURCE_FILE_ENV = 'AGENTS_VIS_DASHBOARD_SOURCE_FILE';
+
 describe('GET /api/missions/latest', () => {
   it('returns the latest mission timeline with ordered events and freshness metadata', async () => {
-    const response = await GET();
+    const previousSourceFile = process.env[SOURCE_FILE_ENV];
+    process.env[SOURCE_FILE_ENV] = 'src/lib/dashboard-live-source.json';
 
-    expect(response.status).toBe(200);
-    expect(response.headers.get('cache-control')).toBe('no-store, max-age=0');
+    try {
+      const response = await GET();
 
-    const payload = assertMissionTimelineResponse(await response.json());
+      expect(response.status).toBe(200);
+      expect(response.headers.get('cache-control')).toBe('no-store, max-age=0');
 
-    expect(payload.mission?.id).toBe('mission-004');
-    expect(payload.eventCount).toBe(payload.events.length);
-    expect(payload.events.map((event) => event.timestamp)).toEqual([
-      '2026-05-27T12:10:00.000Z',
-      '2026-05-27T12:14:00.000Z',
-      '2026-05-27T12:14:00.000Z',
-      '2026-05-27T12:18:00.000Z',
-      '2026-05-27T12:22:00.000Z',
-    ]);
-    expect(payload.events[1]?.parallelGroupId).toBe('mission-004-parallel-01');
-    expect(payload.events[2]?.parallelOrder).toBe(1);
-    expect(['fresh', 'delayed', 'stale']).toContain(payload.freshnessState);
-    expect(payload.source.name).toBe('canonical production live source');
+      const payload = assertMissionTimelineResponse(await response.json());
+
+      expect(payload.mission?.id).toBe('mission-004');
+      expect(payload.eventCount).toBe(payload.events.length);
+      expect(payload.events.map((event) => event.timestamp)).toEqual([
+        '2026-05-27T12:10:00.000Z',
+        '2026-05-27T12:14:00.000Z',
+        '2026-05-27T12:14:00.000Z',
+        '2026-05-27T12:18:00.000Z',
+        '2026-05-27T12:22:00.000Z',
+        '2026-05-27T15:36:00.000Z',
+        '2026-05-27T16:36:08.000Z',
+      ]);
+      expect(payload.events[1]?.parallelGroupId).toBe('mission-004-parallel-01');
+      expect(payload.events[2]?.parallelOrder).toBe(1);
+      expect(['fresh', 'delayed', 'stale']).toContain(payload.freshnessState);
+      expect(payload.source.name).toBe('canonical production live source');
+    } finally {
+      if (previousSourceFile === undefined) {
+        delete process.env[SOURCE_FILE_ENV];
+      } else {
+        process.env[SOURCE_FILE_ENV] = previousSourceFile;
+      }
+    }
   });
 });

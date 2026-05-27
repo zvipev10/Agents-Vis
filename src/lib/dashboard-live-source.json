@@ -36,11 +36,11 @@
       "id": "mission-004",
       "title": "Live truth ingestion and storytelling",
       "status": "running",
-      "updatedAt": "2026-05-27T15:36:00.000Z",
+      "updatedAt": "2026-05-27T16:36:08.000Z",
       "actorName": "Ari",
       "actorRole": "Coordinator",
-      "action": "confirmed the live JSON source refresh keeps the latest mission current",
-      "detail": "The deployed app can poll the canonical remote feed, preserve the single timeline, and keep lag visible instead of hiding it."
+      "action": "reconfirmed the live JSON source refresh keeps the latest mission current",
+      "detail": "The deployed app can still poll the canonical remote feed, preserve the single timeline, and keep lag visible instead of hiding it."
     }
   ],
   "eventRecords": [
@@ -167,6 +167,17 @@
       "timestamp": "2026-05-27T15:36:00.000Z",
       "sequenceIndex": 6,
       "sourceLabel": "canonical production live source"
+    },
+    {
+      "id": "mission-004-event-007",
+      "missionId": "mission-004",
+      "actorName": "Ari",
+      "actorRole": "Coordinator",
+      "action": "re-smoked production and confirmed Mission 004 still displays through the live source",
+      "timestamp": "2026-05-27T16:36:08.000Z",
+      "sequenceIndex": 7,
+      "sourceLabel": "canonical production live source",
+      "detail": "The deployed app still serves Mission 004, freshness lag remains visible, and the canonical feed stays live."
     }
   ]
 }
