@@ -10,6 +10,7 @@ export interface DashboardDataSource {
 }
 
 const DEFAULT_LIVE_SOURCE_FILE = 'src/lib/dashboard-live-source.json';
+const DEFAULT_LIVE_SOURCE_URL = 'https://raw.githubusercontent.com/zvipev10/Agents-Vis/main/src/lib/dashboard-live-source.json';
 const SOURCE_FILE_ENV = 'AGENTS_VIS_DASHBOARD_SOURCE_FILE';
 const SOURCE_NAME_ENV = 'AGENTS_VIS_DASHBOARD_SOURCE_NAME';
 const SOURCE_URL_ENV = 'AGENTS_VIS_DASHBOARD_SOURCE_URL';
@@ -179,6 +180,11 @@ export async function loadDashboardDataSource(): Promise<DashboardDataSource> {
     if (fileSource) {
       return applySourceNameOverride(fileSource, sourceName);
     }
+  }
+
+  const defaultRemoteSource = await loadSourceFromUrl(DEFAULT_LIVE_SOURCE_URL);
+  if (defaultRemoteSource) {
+    return applySourceNameOverride(defaultRemoteSource, sourceName);
   }
 
   const embeddedSource = loadEmbeddedSource();

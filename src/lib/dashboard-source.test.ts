@@ -44,16 +44,56 @@ afterEach(() => {
 });
 
 describe('loadDashboardDataSource', () => {
-  it('loads the default live mission store from the repository file', async () => {
+  it('loads the default live mission store from the verified remote source when no env override is set', async () => {
+    const remotePayload = {
+      sourceName: 'canonical production live source',
+      records: [
+        {
+          id: 'mission-001',
+          title: 'Reconnect the visibility brief',
+          status: 'running',
+          updatedAt: '2026-05-26T07:40:00.000Z',
+        },
+      ],
+      eventRecords: [
+        {
+          id: 'mission-004-event-005',
+          missionId: 'mission-004',
+          actorName: 'Ari',
+          actorRole: 'Coordinator',
+          action: 'recorded the remaining blocker and the next live-source step',
+          timestamp: '2026-05-27T12:22:00.000Z',
+          sequenceIndex: 5,
+          sourceLabel: 'canonical production live source',
+          freshness: 'partial',
+        },
+      ],
+    };
+
+    const fetchMock = vi.spyOn(globalThis, 'fetch').mockResolvedValue(
+      new Response(JSON.stringify(remotePayload), {
+        headers: {
+          'content-type': 'application/json',
+        },
+      }),
+    );
+
     const source = await loadDashboardDataSource();
 
+    expect(fetchMock).toHaveBeenCalledTimes(1);
+    expect(fetchMock).toHaveBeenCalledWith(
+      'https://raw.githubusercontent.com/zvipev10/Agents-Vis/main/src/lib/dashboard-live-source.json',
+      expect.objectContaining({
+        cache: 'no-store',
+        headers: {
+          accept: 'application/json',
+        },
+      }),
+    );
     expect(source.name).toBe('canonical production live source');
-    expect(source.records.map((record) => record.id)).toEqual(['mission-001', 'mission-002', 'mission-003', 'mission-004']);
-    expect(source.eventRecords).toHaveLength(10);
-    expect(source.eventRecords[1]?.parallelGroupId).toBe('mission-003-parallel-01');
-    expect(source.eventRecords[4]?.freshness).toBe('partial');
-    expect(source.eventRecords[7]?.parallelGroupId).toBe('mission-004-parallel-01');
-    expect(source.eventRecords[9]?.freshness).toBe('partial');
+    expect(source.records.map((record) => record.id)).toEqual(['mission-001']);
+    expect(source.eventRecords).toHaveLength(1);
+    expect(source.eventRecords[0]?.freshness).toBe('partial');
   });
 
   it('loads a custom source file when AGENTS_VIS_DASHBOARD_SOURCE_FILE is set', async () => {

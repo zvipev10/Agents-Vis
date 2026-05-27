@@ -6,7 +6,7 @@
 - The pipeline and the story presentation must both be verified
 - This run revalidated local quality gates and produced live production smoke evidence
 - The repo-backed live source snapshot now includes Mission 004 as the latest mission
-- Production smoke now shows the deployed app serving Mission 004 from the canonical live source
+- Production smoke now shows the deployed app serving Mission 004 from the canonical live source snapshot
 
 ## QA focus
 - Verify the production URL opens successfully
@@ -32,3 +32,5 @@
 - Live API smoke from this run:
   - `GET https://agents-vis.vercel.app/api/missions/latest` → 200, Mission 004 payload
   - `GET https://agents-vis.vercel.app/api/dashboard` → 200, stale freshness reported
+- Browser title: `Mission 004`
+- Local smoke in this run verified the app can poll the live GitHub JSON feed and still render Mission 004 with explicit stale freshness

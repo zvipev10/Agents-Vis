@@ -8,7 +8,7 @@
 - The safest practical ingestion path now supported in code is polling a configured HTTPS JSON endpoint via `AGENTS_VIS_DASHBOARD_SOURCE_URL`
 - The repo-backed live source snapshot now includes Mission 004 as the latest mission
 - The code path for remote source polling is already implemented and covered by tests
-- Production now reads the canonical live source and surfaces Mission 004 with explicit stale freshness
+- Production now reads the canonical live source snapshot and surfaces Mission 004 with explicit stale freshness
 
 ## Current backend behavior target
 - Keep `GET /api/missions/latest` stable
@@ -24,14 +24,17 @@
 ## Production source target
 - The final release should not depend on a frozen snapshot
 - The production live source must be explicit and verifiable
-- If no canonical production source exists yet, that is the first backend blocker to solve
+- The repo now has a verified live JSON source to point at: `https://raw.githubusercontent.com/zvipev10/Agents-Vis/main/src/lib/dashboard-live-source.json`
+- This run verified that `AGENTS_VIS_DASHBOARD_SOURCE_URL` can poll that live JSON source locally and return Mission 004
+- The remaining backend blocker is only production env wiring, not code coverage
 - The team should prefer polling a remote JSON endpoint over webhook when the source can expose JSON directly
 - Webhook is not required
-- Production is now reading Mission 004 data from the canonical live source, and stale freshness remains visible by design
+- Production is now reading Mission 004 data from the canonical live source snapshot, and stale freshness remains visible by design
 
 ## Next backend step
-Keep the ingestion path and source shape stable while preserving visible stale/lag semantics in production.
+Keep the ingestion path and source shape stable while preserving visible stale/lag semantics in production, then set the production env value to the verified raw GitHub JSON feed.
 
 ## Live production note
 - The deployed app is serving the Mission 004 snapshot and stale freshness data
 - Production smoke this run confirmed `GET /api/missions/latest` is Mission 004 and `GET /api/dashboard` still reports stale freshness
+- Browser title smoke confirmed `Mission 004`

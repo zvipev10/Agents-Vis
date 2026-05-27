@@ -15,10 +15,12 @@ Mission 004 is about two linked things:
 - Backend and frontend implementation work has started
 - Repo checks are currently green: tests, typecheck, and build pass
 - This run revalidated the local repo successfully with `npm test`, `npm run typecheck`, and `npm run build`
-- This run rechecked production and confirmed the deployed app is now serving Mission 004 data from the canonical live source
+- This run rechecked production and confirmed the deployed app is now serving Mission 004 data from the canonical live source snapshot
 
 ## What remains
 - Keep the stale freshness visible and decide whether the source should be refreshed again
+- The remaining blocker is production wiring: set `AGENTS_VIS_DASHBOARD_SOURCE_URL` in production to the verified live JSON feed at `https://raw.githubusercontent.com/zvipev10/Agents-Vis/main/src/lib/dashboard-live-source.json`
+- Current production smoke still shows `freshnessState: stale` and `lagMs: 8844786`
 - Keep the production deployment path and any external live-source wiring documented for the next run
 
 ## Coordinator instructions
@@ -35,7 +37,9 @@ Mission 004 is about two linked things:
 ## Live runtime note
 - Dev server may still be used for local verification
 - Production verification must happen on the deployed app
-- Production is reachable and returns 200, and the live payload now reflects Mission 004 from the canonical live source with stale freshness data
+- Production is reachable and returns 200, and the live payload now reflects Mission 004 from the canonical live source snapshot with stale freshness data
+- Local runtime smoke verified that the app can poll the real HTTPS JSON feed from `raw.githubusercontent.com` and still render Mission 004
 - Production smoke this run:
   - `GET https://agents-vis.vercel.app/api/missions/latest` → 200, Mission 004 payload, `freshnessState: stale`
   - `GET https://agents-vis.vercel.app/api/dashboard` → 200, Mission 004 payload, stale freshness reported
+- Browser title: `Mission 004`

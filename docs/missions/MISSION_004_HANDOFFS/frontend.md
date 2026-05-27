@@ -6,7 +6,7 @@
 - The app should keep only the latest mission timeline visible
 - The frontend implementation already renders the clearer story contract and preserves chronology, parallel lanes, and freshness cues
 - The repo-backed live source snapshot now includes Mission 004 as the latest mission
-- The production UI title and rendered story now follow Mission 004 from the canonical live source
+- The production UI title and rendered story now follow Mission 004 from the canonical live source snapshot
 
 ## Current frontend behavior target
 - Keep the one-timeline layout
@@ -14,6 +14,7 @@
 - Keep freshness / lag / stale indicators visible
 - Improve the wording and structure of timeline entries so the story reads clearly
 - Keep the UI consumer-friendly and avoid turning it into a second summary dashboard
+- Continue rendering the remote-source payload without changing the visible single-timeline experience
 - Document each frontend step in a PDF artifact stored in the repo
 - This run revalidated the frontend locally as part of the passing test suite, typecheck, and build; the mission PDFs remain in `docs/missions/pdfs/`
 
@@ -23,6 +24,8 @@
 - The UI should highlight who did what, why it mattered, and what changed next
 - The frontend should keep the timeline readable as the live source changes
 - The browser title now follows the latest mission, so the visible page no longer says Mission 003
+- Freshness lag remains visible in the UI and should not be hidden
+- Local smoke against the real HTTPS JSON feed confirms the timeline still renders Mission 004 with the same stale indicator
 
 ## Next frontend step
 Keep the one-timeline layout readable and preserve the stale/freshness state so lag remains visible in the UI.
