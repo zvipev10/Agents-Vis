@@ -23,6 +23,6 @@ describe('GET /api/missions/latest', () => {
     expect(payload.events[1]?.parallelGroupId).toBe('mission-003-parallel-01');
     expect(payload.events[2]?.parallelOrder).toBe(1);
     expect(['fresh', 'delayed', 'stale']).toContain(payload.freshnessState);
-    expect(payload.source.name).toBe('repository-backed live source');
+    expect(payload.source.name).toBe('canonical production live source');
   });
 });

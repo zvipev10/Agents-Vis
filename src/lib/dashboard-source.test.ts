@@ -43,7 +43,7 @@ describe('loadDashboardDataSource', () => {
   it('loads the default live mission store from the repository file', () => {
     const source = loadDashboardDataSource();
 
-    expect(source.name).toBe('repository-backed live source');
+    expect(source.name).toBe('canonical production live source');
     expect(source.records.map((record) => record.id)).toEqual(['mission-001', 'mission-002', 'mission-003']);
     expect(source.eventRecords).toHaveLength(5);
     expect(source.eventRecords[1]?.parallelGroupId).toBe('mission-003-parallel-01');

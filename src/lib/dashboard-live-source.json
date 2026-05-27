@@ -1,0 +1,95 @@
+{
+  "sourceName": "canonical production live source",
+  "records": [
+    {
+      "id": "mission-001",
+      "title": "Reconnect the visibility brief",
+      "status": "running",
+      "updatedAt": "2026-05-26T07:40:00.000Z",
+      "actorName": "Ari",
+      "actorRole": "Coordinator",
+      "action": "reframed the delivery gates",
+      "detail": "Clarified the privacy, read-only, and preview-first expectations for the visibility application."
+    },
+    {
+      "id": "mission-002",
+      "title": "Stabilize the dashboard contract",
+      "status": "completed",
+      "updatedAt": "2026-05-26T07:44:00.000Z",
+      "actorName": "Mira",
+      "actorRole": "Backend Developer",
+      "action": "validated the typed response contract",
+      "detail": "Added runtime checks and graceful fallbacks for partially missing source data."
+    },
+    {
+      "id": "mission-003",
+      "title": "Finalize visibility polish",
+      "status": "running",
+      "updatedAt": "2026-05-26T07:52:00.000Z",
+      "actorName": null,
+      "actorRole": null,
+      "action": null,
+      "detail": null,
+      "summary": "The latest pass is still being reconciled after hardening."
+    }
+  ],
+  "eventRecords": [
+    {
+      "id": "mission-003-event-001",
+      "missionId": "mission-003",
+      "actorName": "Ari",
+      "actorRole": "Coordinator",
+      "action": "opened Mission 002 and confirmed the replay scope",
+      "timestamp": "2026-05-26T07:52:00.000Z",
+      "sequenceIndex": 1,
+      "sourceLabel": "canonical production live source"
+    },
+    {
+      "id": "mission-003-event-002",
+      "missionId": "mission-003",
+      "actorName": "Mira",
+      "actorRole": "Backend Developer",
+      "action": "mapped the read-only event contract",
+      "timestamp": "2026-05-26T07:53:00.000Z",
+      "sequenceIndex": 2,
+      "sourceLabel": "canonical production live source",
+      "parallelGroupId": "mission-003-parallel-01",
+      "parallelOrder": 0,
+      "parallelSize": 2
+    },
+    {
+      "id": "mission-003-event-003",
+      "missionId": "mission-003",
+      "actorName": "Theo",
+      "actorRole": "Frontend Developer",
+      "action": "drafted the live timeline rendering states",
+      "timestamp": "2026-05-26T07:53:00.000Z",
+      "sequenceIndex": 3,
+      "sourceLabel": "canonical production live source",
+      "parallelGroupId": "mission-003-parallel-01",
+      "parallelOrder": 1,
+      "parallelSize": 2
+    },
+    {
+      "id": "mission-003-event-004",
+      "missionId": "mission-003",
+      "actorName": "Nia",
+      "actorRole": "QA",
+      "action": "checked ordering, lag, and stale-state handling",
+      "timestamp": "2026-05-26T07:54:00.000Z",
+      "sequenceIndex": 4,
+      "sourceLabel": "canonical production live source"
+    },
+    {
+      "id": "mission-003-event-005",
+      "missionId": "mission-003",
+      "actorName": null,
+      "actorRole": null,
+      "action": null,
+      "timestamp": "2026-05-26T07:55:00.000Z",
+      "sequenceIndex": 5,
+      "sourceLabel": "canonical production live source",
+      "freshness": "partial"
+    }
+  ]
+}

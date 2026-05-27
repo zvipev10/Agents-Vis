@@ -8,7 +8,7 @@ export interface DashboardDataSource {
   eventRecords: readonly MissionTimelineEventRecord[];
 }
 
-const DEFAULT_LIVE_SOURCE_FILE = 'docs/missions/MISSION_002_LIVE_SOURCE.json';
+const DEFAULT_LIVE_SOURCE_FILE = 'src/lib/dashboard-live-source.json';
 const SOURCE_FILE_ENV = 'AGENTS_VIS_DASHBOARD_SOURCE_FILE';
 const SOURCE_NAME_ENV = 'AGENTS_VIS_DASHBOARD_SOURCE_NAME';
 const EMPTY_RECORDS: readonly MissionRecord[] = [];
