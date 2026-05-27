@@ -42,13 +42,13 @@ function selectLatestMissionRecord(
     })[0] ?? null;
 }
 
-export function getDashboardResponse(generatedAt = new Date()): DashboardResponse {
-  const source = loadDashboardDataSource();
+export async function getDashboardResponse(generatedAt = new Date()): Promise<DashboardResponse> {
+  const source = await loadDashboardDataSource();
   return buildDashboardResponse(source.records, generatedAt, source.eventRecords, source.name);
 }
 
-export function getLatestMissionTimelineResponse(generatedAt = new Date()): MissionTimelineResponse {
-  const source = loadDashboardDataSource();
+export async function getLatestMissionTimelineResponse(generatedAt = new Date()): Promise<MissionTimelineResponse> {
+  const source = await loadDashboardDataSource();
   const record = selectLatestMissionRecord(source.records);
 
   return buildMissionTimelineResponse(record, source.eventRecords, generatedAt, source.name);

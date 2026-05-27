@@ -1,16 +1,18 @@
 import { mkdtempSync, rmSync, writeFileSync } from 'node:fs';
 import { tmpdir } from 'node:os';
 import { join } from 'node:path';
-import { afterEach, describe, expect, it } from 'vitest';
+import { afterEach, describe, expect, it, vi } from 'vitest';
 import { loadDashboardDataSource } from './dashboard-source';
 
 const SOURCE_FILE_ENV = 'AGENTS_VIS_DASHBOARD_SOURCE_FILE';
 const SOURCE_NAME_ENV = 'AGENTS_VIS_DASHBOARD_SOURCE_NAME';
+const SOURCE_URL_ENV = 'AGENTS_VIS_DASHBOARD_SOURCE_URL';
 
-function withEnv<T>(updates: Record<string, string | undefined>, run: () => T): T {
+async function withEnv<T>(updates: Record<string, string | undefined>, run: () => T): Promise<Awaited<T>> {
   const previous: Record<string, string | undefined> = {
     [SOURCE_FILE_ENV]: process.env[SOURCE_FILE_ENV],
     [SOURCE_NAME_ENV]: process.env[SOURCE_NAME_ENV],
+    [SOURCE_URL_ENV]: process.env[SOURCE_URL_ENV],
   };
 
   try {
@@ -22,7 +24,7 @@ function withEnv<T>(updates: Record<string, string | undefined>, run: () => T): 
       }
     }
 
-    return run();
+    return await run();
   } finally {
     for (const [key, value] of Object.entries(previous)) {
       if (value === undefined) {
@@ -37,20 +39,24 @@ function withEnv<T>(updates: Record<string, string | undefined>, run: () => T): 
 afterEach(() => {
   delete process.env[SOURCE_FILE_ENV];
   delete process.env[SOURCE_NAME_ENV];
+  delete process.env[SOURCE_URL_ENV];
+  vi.restoreAllMocks();
 });
 
 describe('loadDashboardDataSource', () => {
-  it('loads the default live mission store from the repository file', () => {
-    const source = loadDashboardDataSource();
+  it('loads the default live mission store from the repository file', async () => {
+    const source = await loadDashboardDataSource();
 
     expect(source.name).toBe('canonical production live source');
-    expect(source.records.map((record) => record.id)).toEqual(['mission-001', 'mission-002', 'mission-003']);
-    expect(source.eventRecords).toHaveLength(5);
+    expect(source.records.map((record) => record.id)).toEqual(['mission-001', 'mission-002', 'mission-003', 'mission-004']);
+    expect(source.eventRecords).toHaveLength(10);
     expect(source.eventRecords[1]?.parallelGroupId).toBe('mission-003-parallel-01');
     expect(source.eventRecords[4]?.freshness).toBe('partial');
+    expect(source.eventRecords[7]?.parallelGroupId).toBe('mission-004-parallel-01');
+    expect(source.eventRecords[9]?.freshness).toBe('partial');
   });
 
-  it('loads a custom source file when AGENTS_VIS_DASHBOARD_SOURCE_FILE is set', () => {
+  it('loads a custom source file when AGENTS_VIS_DASHBOARD_SOURCE_FILE is set', async () => {
     const tempDir = mkdtempSync(join(tmpdir(), 'agents-vis-dashboard-source-'));
     const sourcePath = join(tempDir, 'custom-source.json');
 
@@ -99,7 +105,7 @@ describe('loadDashboardDataSource', () => {
         ),
       );
 
-      const source = withEnv(
+      const source = await withEnv(
         {
           [SOURCE_FILE_ENV]: sourcePath,
         },
@@ -116,7 +122,67 @@ describe('loadDashboardDataSource', () => {
     }
   });
 
-  it('applies AGENTS_VIS_DASHBOARD_SOURCE_NAME to the loaded source', () => {
+  it('polls a remote JSON source when AGENTS_VIS_DASHBOARD_SOURCE_URL is set', async () => {
+    const remotePayload = {
+      sourceName: 'remote live source',
+      records: [
+        {
+          id: 'mission-remote',
+          title: 'Remote mission',
+          status: 'completed',
+          updatedAt: '2026-05-26T12:00:00.000Z',
+        },
+      ],
+      eventRecords: [
+        {
+          id: 'mission-remote-event-1',
+          missionId: 'mission-remote',
+          actorName: 'Ari',
+          actorRole: 'Coordinator',
+          action: 'published the live remote source',
+          timestamp: '2026-05-26T12:00:00.000Z',
+          sequenceIndex: 1,
+          parallelGroupId: 'mission-remote-parallel-01',
+          parallelOrder: 0,
+          parallelSize: 2,
+          sourceLabel: 'remote live source',
+        },
+      ],
+    };
+
+    const fetchMock = vi.spyOn(globalThis, 'fetch').mockResolvedValue(
+      new Response(JSON.stringify(remotePayload), {
+        headers: {
+          'content-type': 'application/json',
+        },
+      }),
+    );
+
+    const source = await withEnv(
+      {
+        [SOURCE_URL_ENV]: 'https://example.com/live-source.json',
+      },
+      () => loadDashboardDataSource(),
+    );
+
+    expect(fetchMock).toHaveBeenCalledTimes(1);
+    expect(fetchMock).toHaveBeenCalledWith(
+      'https://example.com/live-source.json',
+      expect.objectContaining({
+        cache: 'no-store',
+        headers: {
+          accept: 'application/json',
+        },
+      }),
+    );
+    expect(source.name).toBe('remote live source');
+    expect(source.records).toHaveLength(1);
+    expect(source.eventRecords).toHaveLength(1);
+    expect(source.eventRecords[0]?.parallelGroupId).toBe('mission-remote-parallel-01');
+    expect(source.eventRecords[0]?.parallelSize).toBe(2);
+  });
+
+  it('applies AGENTS_VIS_DASHBOARD_SOURCE_NAME to the loaded source', async () => {
     const tempDir = mkdtempSync(join(tmpdir(), 'agents-vis-dashboard-source-name-'));
     const sourcePath = join(tempDir, 'named-source.json');
 
@@ -140,7 +206,7 @@ describe('loadDashboardDataSource', () => {
         ),
       );
 
-      const source = withEnv(
+      const source = await withEnv(
         {
           [SOURCE_FILE_ENV]: sourcePath,
           [SOURCE_NAME_ENV]: 'override source name',

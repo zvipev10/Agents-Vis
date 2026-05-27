@@ -3,8 +3,8 @@ import { getLatestMissionTimelineResponse } from '../../../../lib/dashboard-serv
 
 export const dynamic = 'force-dynamic';
 
-export function GET() {
-  return NextResponse.json(getLatestMissionTimelineResponse(), {
+export async function GET() {
+  return NextResponse.json(await getLatestMissionTimelineResponse(), {
     headers: {
       'Cache-Control': 'no-store, max-age=0',
     },

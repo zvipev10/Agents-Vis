@@ -3,15 +3,6 @@
 import type { DashboardResponse } from '../../lib/dashboard-types';
 import { MissionTimeline } from './MissionTimeline';
 
-function missionLabelFromId(id: string | null | undefined): string {
-  if (!id) {
-    return 'Mission replay';
-  }
-
-  const match = /^mission-(.+)$/.exec(id);
-  return match ? `Mission ${match[1]}` : 'Mission replay';
-}
-
 export type DashboardViewState =
   | { status: 'loading' }
   | { status: 'error'; message: string }
@@ -64,14 +55,14 @@ function ErrorState({ message }: { message: string }) {
 }
 
 export function DashboardShell({ state }: DashboardShellProps) {
-  const title = state.status === 'ready' ? missionLabelFromId(state.dashboard.latestMission?.id) : 'Mission replay';
+  const title = state.status === 'ready' ? state.dashboard.latestMission?.title ?? 'Mission replay' : 'Mission replay';
 
   return (
     <main className="app-shell">
       <section className="hero">
         <p className="eyebrow">Private visibility application</p>
         <h1 className="title">{title}</h1>
-        <p className="lede">A single live replay of the latest mission, with chronological ordering, visible parallel work, and explicit freshness cues.</p>
+        <p className="lede">A single read-only replay of the latest mission, with chronological ordering, visible parallel work, and explicit freshness cues.</p>
       </section>
 
       {state.status === 'loading' ? <LoadingState /> : null}

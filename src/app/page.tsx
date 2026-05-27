@@ -3,8 +3,8 @@ import { getDashboardResponse } from '../lib/dashboard-service';
 
 export const dynamic = 'force-dynamic';
 
-export default function HomePage() {
-  const dashboard = getDashboardResponse();
+export default async function HomePage() {
+  const dashboard = await getDashboardResponse();
 
   return <DashboardShell state={{ status: 'ready', dashboard }} />;
 }

@@ -12,9 +12,11 @@ export interface DashboardDataSource {
 const DEFAULT_LIVE_SOURCE_FILE = 'src/lib/dashboard-live-source.json';
 const SOURCE_FILE_ENV = 'AGENTS_VIS_DASHBOARD_SOURCE_FILE';
 const SOURCE_NAME_ENV = 'AGENTS_VIS_DASHBOARD_SOURCE_NAME';
+const SOURCE_URL_ENV = 'AGENTS_VIS_DASHBOARD_SOURCE_URL';
 const EMPTY_RECORDS: readonly MissionRecord[] = [];
 const EMPTY_EVENT_RECORDS: readonly MissionTimelineEventRecord[] = [];
 const EMBEDDED_LIVE_SOURCE = defaultLiveSource as Record<string, unknown>;
+const SOURCE_FETCH_TIMEOUT_MS = 5_000;
 
 function asArray<T>(value: unknown): readonly T[] | null {
   return Array.isArray(value) ? (value as readonly T[]) : null;
@@ -76,6 +78,15 @@ function resolveSourceFile(filePath: string): string {
   return isAbsolute(filePath) ? filePath : resolve(process.cwd(), filePath);
 }
 
+function isHttpUrl(value: string): boolean {
+  try {
+    const url = new URL(value);
+    return url.protocol === 'http:' || url.protocol === 'https:';
+  } catch {
+    return false;
+  }
+}
+
 function loadSourceFromParsed(parsed: Record<string, unknown>, fallbackName: string): DashboardDataSource | null {
   const records = asArray<unknown>(parsed.records)?.filter(isMissionRecordLike) ?? null;
   const eventRecords = asArray<unknown>(parsed.eventRecords)?.filter(isMissionTimelineEventRecordLike) ?? null;
@@ -106,6 +117,36 @@ function loadSourceFromFile(filePath: string): DashboardDataSource | null {
   }
 }
 
+async function loadSourceFromUrl(url: string): Promise<DashboardDataSource | null> {
+  if (!isHttpUrl(url)) {
+    return null;
+  }
+
+  const controller = new AbortController();
+  const timeout = setTimeout(() => controller.abort(), SOURCE_FETCH_TIMEOUT_MS);
+
+  try {
+    const response = await fetch(url, {
+      cache: 'no-store',
+      headers: {
+        accept: 'application/json',
+      },
+      signal: controller.signal,
+    });
+
+    if (!response.ok) {
+      return null;
+    }
+
+    const parsed = (await response.json()) as Record<string, unknown>;
+    return loadSourceFromParsed(parsed, url);
+  } catch {
+    return null;
+  } finally {
+    clearTimeout(timeout);
+  }
+}
+
 function loadEmbeddedSource(): DashboardDataSource | null {
   return loadSourceFromParsed(EMBEDDED_LIVE_SOURCE, DEFAULT_LIVE_SOURCE_FILE);
 }
@@ -121,9 +162,17 @@ function applySourceNameOverride(source: DashboardDataSource, sourceName: string
   };
 }
 
-export function loadDashboardDataSource(): DashboardDataSource {
+export async function loadDashboardDataSource(): Promise<DashboardDataSource> {
   const sourceName = process.env[SOURCE_NAME_ENV]?.trim();
+  const envSourceUrl = process.env[SOURCE_URL_ENV]?.trim();
   const envSourceFile = process.env[SOURCE_FILE_ENV]?.trim();
+
+  if (envSourceUrl) {
+    const remoteSource = await loadSourceFromUrl(envSourceUrl);
+    if (remoteSource) {
+      return applySourceNameOverride(remoteSource, sourceName);
+    }
+  }
 
   if (envSourceFile) {
     const fileSource = loadSourceFromFile(envSourceFile);

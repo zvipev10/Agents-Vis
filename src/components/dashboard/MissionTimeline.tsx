@@ -1,42 +1,16 @@
 'use client';
 
-import type { DashboardResponse, MissionCard as MissionCardData } from '../../lib/dashboard-types';
-
-function missionLabelFromId(id: string | null | undefined): string {
-  if (!id) {
-    return 'Mission replay';
-  }
-
-  const match = /^mission-(.+)$/.exec(id);
-  return match ? `Mission ${match[1]}` : 'Mission replay';
-}
-
+import type { DashboardResponse, MissionCard as MissionCardData, MissionTimelineEvent } from '../../lib/dashboard-types';
 
 interface MissionTimelineProps {
   dashboard: DashboardResponse;
 }
 
-interface TimelineLane {
+interface TimelineGroup {
   id: string;
-  title: string;
-  tone: 'live' | 'muted';
-  detail: string;
+  kind: 'single' | 'parallel';
+  events: MissionTimelineEvent[];
 }
-
-const PARALLEL_LANES: TimelineLane[] = [
-  {
-    id: 'coordination',
-    title: 'Coordination lane',
-    tone: 'live',
-    detail: 'Coordinator decisions stay visible here while the mission remains in flight.',
-  },
-  {
-    id: 'execution',
-    title: 'Execution lane',
-    tone: 'muted',
-    detail: 'Backend, frontend, and QA work will split into their own visible tracks once the event contract includes concurrency metadata.',
-  },
-];
 
 function formatDateTime(value: string | null): string {
   if (!value) {
@@ -107,60 +81,160 @@ function freshnessLabel(tone: ReturnType<typeof freshnessTone>): string {
   return 'Empty';
 }
 
-function missionLabel(mission: MissionCardData | null): string {
+function statusLabel(status: MissionCardData['status']): string {
+  if (status === 'running') {
+    return 'Running';
+  }
+
+  if (status === 'completed') {
+    return 'Completed';
+  }
+
+  return 'Status unavailable';
+}
+
+function missionActorLabel(mission: MissionCardData | null): string {
   if (!mission) {
-    return 'No mission event available';
+    return 'No agent activity yet';
   }
 
   return mission.actorRole ? `${mission.actorName} · ${mission.actorRole}` : mission.actorName;
+}
+
+function eventActorLabel(event: MissionTimelineEvent): string {
+  return event.actorRole ? `${event.actorName} · ${event.actorRole}` : event.actorName;
+}
+
+function sequenceLabel(sequenceIndex: number): string {
+  return `Step ${String(sequenceIndex).padStart(2, '0')}`;
+}
+
+function groupTimelineEvents(events: MissionTimelineEvent[]): TimelineGroup[] {
+  const groups: TimelineGroup[] = [];
+
+  for (let index = 0; index < events.length; index += 1) {
+    const event = events[index];
+
+    if (event.parallelGroupId && event.parallelSize && event.parallelSize > 1) {
+      const existingGroup = groups[groups.length - 1];
+      if (existingGroup?.kind === 'parallel' && existingGroup.id === event.parallelGroupId) {
+        existingGroup.events.push(event);
+        continue;
+      }
+
+      groups.push({
+        id: event.parallelGroupId,
+        kind: 'parallel',
+        events: [event],
+      });
+      continue;
+    }
+
+    groups.push({
+      id: event.id,
+      kind: 'single',
+      events: [event],
+    });
+  }
+
+  return groups;
+}
+
+function freshnessBadgeClass(freshness: MissionTimelineEvent['freshness']): string {
+  if (freshness === 'fresh') {
+    return 'badge--fresh';
+  }
+
+  if (freshness === 'partial') {
+    return 'badge--partial';
+  }
+
+  if (freshness === 'stale') {
+    return 'badge--stale';
+  }
+
+  return 'badge--source';
+}
+
+function freshnessEventLabel(freshness: MissionTimelineEvent['freshness']): string {
+  if (freshness === 'fresh') {
+    return 'Live';
+  }
+
+  if (freshness === 'partial') {
+    return 'Partial';
+  }
+
+  if (freshness === 'stale') {
+    return 'Stale';
+  }
+
+  if (freshness === 'delayed') {
+    return 'Delayed';
+  }
+
+  return 'Unavailable';
+}
+
+function timelineLagLabel(freshness: ReturnType<typeof freshnessTone>, lag: number | null): string {
+  if (lag === null) {
+    return 'Lag cannot be calculated yet';
+  }
+
+  if (freshness === 'stale') {
+    return `Stale by about ${lag} minute${lag === 1 ? '' : 's'}`;
+  }
+
+  return `${lag} minute${lag === 1 ? '' : 's'} behind the live clock`;
 }
 
 export function MissionTimeline({ dashboard }: MissionTimelineProps) {
   const latestMission = dashboard.latestMission;
   const freshness = freshnessTone(dashboard);
   const lag = lagMinutes(dashboard.generatedAt, dashboard.source.updatedAt);
-  const replayLabel = latestMission ? `${missionLabelFromId(latestMission.id)} replay` : 'Mission replay';
+  const timelineGroups = groupTimelineEvents(dashboard.timeline.events);
+  const eventCountLabel = dashboard.timeline.eventCount === 1 ? '1 recorded step' : `${dashboard.timeline.eventCount} recorded steps`;
+  const parallelGroupCount = timelineGroups.filter((group) => group.kind === 'parallel').length;
 
   return (
     <section className="panel panel-padding mission-timeline" aria-label="Latest mission timeline">
       <div className="mission-timeline__header">
         <div className="mission-timeline__headline-group">
-          <p className="eyebrow">{replayLabel}</p>
-          <h2 className="panel-title">Last mission only</h2>
+          <p className="eyebrow">Latest mission replay</p>
+          <h2 className="panel-title">One mission, one timeline</h2>
           <p className="mission-detail">
-            One chronological feed for the latest mission. Events remain in order, concurrent work can fan out into lanes,
-            and lag is called out when the source stops moving.
+            Read the latest mission as a story: who acted, what changed, and why it matters, while keeping chronology,
+            visible parallel work, and freshness cues intact.
           </p>
         </div>
 
         <div className="mission-timeline__status" aria-label="Mission freshness status">
           <span className={`badge badge--${freshness}`}>{freshnessLabel(freshness)}</span>
           <span className="badge badge--latest">Latest mission only</span>
-          <span className="badge badge--source">{dashboard.summary.total} feed snapshots</span>
+          <span className="badge badge--source">{eventCountLabel}</span>
         </div>
       </div>
 
       <div className="mission-timeline__meta-row" aria-label="Timeline metadata">
         <div className="mission-timeline__meta-card">
-          <span className="mission-timeline__meta-label">Latest activity</span>
-          <strong>{latestMission ? latestMission.headline : 'Waiting for the next live event'}</strong>
-          <span>{latestMission ? missionLabel(latestMission) : 'No agent activity yet'}</span>
+          <span className="mission-timeline__meta-label">Mission focus</span>
+          <strong>{latestMission ? latestMission.title : 'No mission history yet'}</strong>
+          <span>{latestMission ? statusLabel(latestMission.status) : 'Waiting for the next live event'}</span>
         </div>
         <div className="mission-timeline__meta-card">
-          <span className="mission-timeline__meta-label">Source updated</span>
+          <span className="mission-timeline__meta-label">Who acted</span>
+          <strong>{missionActorLabel(latestMission)}</strong>
+          <span>{latestMission ? latestMission.action : 'The story will appear once the latest mission emits its first update.'}</span>
+        </div>
+        <div className="mission-timeline__meta-card">
+          <span className="mission-timeline__meta-label">Why it matters</span>
+          <strong>{latestMission ? latestMission.headline : 'No narrative yet'}</strong>
+          <span>{latestMission ? latestMission.detail : 'Detail will appear here when the latest mission includes agent-written context.'}</span>
+        </div>
+        <div className="mission-timeline__meta-card">
+          <span className="mission-timeline__meta-label">Freshness</span>
           <strong>{formatDateTime(dashboard.source.updatedAt)}</strong>
-          <span>
-            {lag === null
-              ? 'Lag cannot be calculated yet'
-              : freshness === 'stale'
-                ? `Stale by about ${lag} minute${lag === 1 ? '' : 's'}`
-                : `${lag} minute${lag === 1 ? '' : 's'} behind the live clock`}
-          </span>
-        </div>
-        <div className="mission-timeline__meta-card">
-          <span className="mission-timeline__meta-label">Replay depth</span>
-          <strong>{dashboard.summary.total} recorded items</strong>
-          <span>{dashboard.summary.running} running, {dashboard.summary.completed} completed</span>
+          <span>{timelineLagLabel(freshness, lag)}</span>
         </div>
       </div>
 
@@ -172,75 +246,110 @@ export function MissionTimeline({ dashboard }: MissionTimelineProps) {
                 <span className="timeline-event__index">00</span>
                 <span className="timeline-event__time">Mission opened</span>
               </div>
-              <h3 className="timeline-event__title">Replay shell connected</h3>
+              <h3 className="timeline-event__title">Replay connected to the latest mission</h3>
               <p className="timeline-event__body">
-                The timeline opens on the latest mission and will keep extending as new events arrive.
+                The app shows a single read-only timeline for the newest mission and keeps the narrative in chronological order.
               </p>
-            </div>
-          </article>
-
-          {latestMission ? (
-            <article className="timeline-event timeline-event--current" aria-label="Current mission event" aria-live="polite">
-              <div className="timeline-event__card timeline-event__card--current">
-                <div className="timeline-event__meta">
-                  <span className="timeline-event__index">01</span>
-                  <span className="timeline-event__time">{formatDateTime(latestMission.updatedAt)}</span>
-                </div>
-                <h3 className="timeline-event__title">{latestMission.headline}</h3>
-                <p className="timeline-event__body">{latestMission.detail}</p>
+              {latestMission ? (
                 <div className="timeline-event__footer">
                   <span className="badge badge--source">{latestMission.title}</span>
                   <span className={`badge ${latestMission.status === 'running' ? 'badge--running' : latestMission.status === 'completed' ? 'badge--completed' : 'badge--unknown'}`}>
-                    {latestMission.status === 'running' ? 'Running' : latestMission.status === 'completed' ? 'Completed' : 'Status unavailable'}
+                    {statusLabel(latestMission.status)}
                   </span>
                 </div>
-              </div>
-            </article>
+              ) : null}
+            </div>
+          </article>
+
+          {timelineGroups.length > 0 ? (
+            timelineGroups.map((group) => {
+              const firstEvent = group.events[0];
+
+              if (!firstEvent) {
+                return null;
+              }
+
+              if (group.kind === 'parallel') {
+                return (
+                  <article
+                    key={group.id}
+                    className="timeline-event timeline-event--parallel"
+                    aria-label={`Parallel activity starting at step ${firstEvent.sequenceIndex}`}
+                  >
+                    <div className="timeline-event__card">
+                      <div className="timeline-event__meta">
+                        <span className="timeline-event__index">{sequenceLabel(firstEvent.sequenceIndex)}</span>
+                        <span className="timeline-event__time">{formatDateTime(firstEvent.timestamp)}</span>
+                      </div>
+                      <h3 className="timeline-event__title">Parallel work stayed visible without losing order</h3>
+                      <p className="timeline-event__body">
+                        These updates happened together in the story, and the lanes below keep each actor and action readable.
+                      </p>
+
+                      <div className="parallel-grid" role="list" aria-label="Parallel lanes">
+                        {group.events.map((event) => {
+                          const laneNumber = event.parallelOrder !== null ? event.parallelOrder + 1 : group.events.indexOf(event) + 1;
+                          const laneSize = event.parallelSize ?? group.events.length;
+
+                          return (
+                            <div
+                              key={event.id}
+                              className={`parallel-lane ${event.freshness === 'stale' ? '' : 'parallel-lane--live'}`}
+                              role="listitem"
+                              aria-label={eventActorLabel(event)}
+                            >
+                              <span className="timeline-event__index">Lane {laneNumber} of {laneSize}</span>
+                              <h4>{eventActorLabel(event)}</h4>
+                              <p>{event.action}</p>
+                            </div>
+                          );
+                        })}
+                      </div>
+                    </div>
+                  </article>
+                );
+              }
+
+              const event = firstEvent;
+
+              return (
+                <article key={group.id} className="timeline-event" aria-label={`Timeline step ${event.sequenceIndex}`}>
+                  <div className="timeline-event__card">
+                    <div className="timeline-event__meta">
+                      <span className="timeline-event__index">{sequenceLabel(event.sequenceIndex)}</span>
+                      <span className="timeline-event__time">{formatDateTime(event.timestamp)}</span>
+                    </div>
+                    <h3 className="timeline-event__title">{eventActorLabel(event)}</h3>
+                    <p className="timeline-event__body">{event.action}</p>
+                    <div className="timeline-event__footer">
+                      <span className="badge badge--source">{event.sourceLabel ?? 'Live source'}</span>
+                      <span className={`badge ${freshnessBadgeClass(event.freshness)}`}>
+                        {freshnessEventLabel(event.freshness)}
+                      </span>
+                    </div>
+                  </div>
+                </article>
+              );
+            })
           ) : (
             <article className="timeline-event timeline-event--empty" aria-label="Empty timeline">
               <div className="timeline-event__card timeline-event__card--empty">
                 <div className="timeline-event__meta">
                   <span className="timeline-event__index">01</span>
-                  <span className="timeline-event__time">No data yet</span>
+                  <span className="timeline-event__time">No recorded steps yet</span>
                 </div>
-                <h3 className="timeline-event__title">No live mission event available</h3>
-                <p className="timeline-event__body">The timeline will fill in automatically once the last mission emits event data.</p>
+                <h3 className="timeline-event__title">The latest mission is ready, but its event stream has not started</h3>
+                <p className="timeline-event__body">
+                  As soon as the mission emits events, this area will fill with the ordered story and keep any parallel work grouped.
+                </p>
               </div>
             </article>
           )}
 
-          <article className="timeline-event timeline-event--parallel" aria-label="Parallel activity scaffold">
-            <div className="timeline-event__card">
-              <div className="timeline-event__meta">
-                <span className="timeline-event__index">02</span>
-                <span className="timeline-event__time">Parallel workstream</span>
-              </div>
-              <h3 className="timeline-event__title">Concurrent activity will appear as separate lanes</h3>
-              <p className="timeline-event__body">
-                This scaffold reserves room for parallel agent work so overlapping execution does not get flattened into a single row.
-              </p>
-
-              <div className="parallel-grid" role="list" aria-label="Parallel lanes">
-                {PARALLEL_LANES.map((lane) => (
-                  <div
-                    key={lane.id}
-                    className={`parallel-lane parallel-lane--${lane.tone}`}
-                    role="listitem"
-                    aria-label={lane.title}
-                  >
-                    <span className="timeline-event__index">Lane</span>
-                    <h4>{lane.title}</h4>
-                    <p>{lane.detail}</p>
-                  </div>
-                ))}
-              </div>
-            </div>
-          </article>
-
           <article className="timeline-event timeline-event--lag" aria-label="Lag and freshness status">
             <div className="timeline-event__card timeline-event__card--status">
               <div className="timeline-event__meta">
-                <span className="timeline-event__index">03</span>
+                <span className="timeline-event__index">{String((timelineGroups.length || 0) + 1).padStart(2, '0')}</span>
                 <span className="timeline-event__time">Freshness monitor</span>
               </div>
               <h3 className="timeline-event__title">
@@ -251,6 +360,10 @@ export function MissionTimeline({ dashboard }: MissionTimelineProps) {
                   ? 'New events are overdue compared with the latest source update, so the UI should visibly warn the user.'
                   : 'When the source slows down, this slot will surface stale or delayed data instead of silently hiding the gap.'}
               </p>
+              <div className="timeline-event__footer">
+                <span className="badge badge--source">{parallelGroupCount} parallel group{parallelGroupCount === 1 ? '' : 's'}</span>
+                <span className={`badge badge--${freshness}`}>{freshnessLabel(freshness)}</span>
+              </div>
             </div>
           </article>
         </div>

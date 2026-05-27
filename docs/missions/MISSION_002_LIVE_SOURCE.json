@@ -31,6 +31,16 @@
       "action": null,
       "detail": null,
       "summary": "The latest pass is still being reconciled after hardening."
+    },
+    {
+      "id": "mission-004",
+      "title": "Live truth ingestion and storytelling",
+      "status": "running",
+      "updatedAt": "2026-05-27T12:22:00.000Z",
+      "actorName": "Ari",
+      "actorRole": "Coordinator",
+      "action": "validated the live source path and kept the release gate open",
+      "detail": "The app can already read a remote JSON source, but production still needs the canonical source value before the deployed timeline can move off Mission 003."
     }
   ],
   "eventRecords": [
@@ -83,10 +93,67 @@
     {
       "id": "mission-003-event-005",
       "missionId": "mission-003",
-      "actorName": null,
+      "actorName": "Unknown agent",
       "actorRole": null,
-      "action": null,
+      "action": "updated the mission",
       "timestamp": "2026-05-26T07:55:00.000Z",
+      "sequenceIndex": 5,
+      "sourceLabel": "repository-backed live source",
+      "freshness": "partial"
+    },
+    {
+      "id": "mission-004-event-001",
+      "missionId": "mission-004",
+      "actorName": "Ari",
+      "actorRole": "Coordinator",
+      "action": "opened Mission 004 and clarified the mission brief",
+      "timestamp": "2026-05-27T12:10:00.000Z",
+      "sequenceIndex": 1,
+      "sourceLabel": "repository-backed live source"
+    },
+    {
+      "id": "mission-004-event-002",
+      "missionId": "mission-004",
+      "actorName": "Mira",
+      "actorRole": "Backend Developer",
+      "action": "confirmed the remote JSON source path and kept the API read-only",
+      "timestamp": "2026-05-27T12:14:00.000Z",
+      "sequenceIndex": 2,
+      "sourceLabel": "repository-backed live source",
+      "parallelGroupId": "mission-004-parallel-01",
+      "parallelOrder": 0,
+      "parallelSize": 2
+    },
+    {
+      "id": "mission-004-event-003",
+      "missionId": "mission-004",
+      "actorName": "Theo",
+      "actorRole": "Frontend Developer",
+      "action": "reshaped the single timeline so the story reads clearly",
+      "timestamp": "2026-05-27T12:14:00.000Z",
+      "sequenceIndex": 3,
+      "sourceLabel": "repository-backed live source",
+      "parallelGroupId": "mission-004-parallel-01",
+      "parallelOrder": 1,
+      "parallelSize": 2
+    },
+    {
+      "id": "mission-004-event-004",
+      "missionId": "mission-004",
+      "actorName": "Nia",
+      "actorRole": "QA",
+      "action": "reran the local gates and confirmed production still serves Mission 003",
+      "timestamp": "2026-05-27T12:18:00.000Z",
+      "sequenceIndex": 4,
+      "sourceLabel": "repository-backed live source"
+    },
+    {
+      "id": "mission-004-event-005",
+      "missionId": "mission-004",
+      "actorName": "Ari",
+      "actorRole": "Coordinator",
+      "action": "recorded the remaining blocker and the next live-source step",
+      "timestamp": "2026-05-27T12:22:00.000Z",
       "sequenceIndex": 5,
       "sourceLabel": "repository-backed live source",
       "freshness": "partial"

@@ -3,8 +3,8 @@ import { getDashboardResponse } from '../../../lib/dashboard-service';
 
 export const dynamic = 'force-dynamic';
 
-export function GET() {
-  return NextResponse.json(getDashboardResponse(), {
+export async function GET() {
+  return NextResponse.json(await getDashboardResponse(), {
     headers: {
       'Cache-Control': 'no-store, max-age=0',
     },

@@ -4,7 +4,7 @@ import { assertDashboardResponse } from '../../../lib/dashboard-types';
 
 describe('GET /api/dashboard', () => {
   it('returns a typed read-only dashboard payload', async () => {
-    const response = GET();
+    const response = await GET();
 
     expect(response.status).toBe(200);
     expect(response.headers.get('cache-control')).toBe('no-store, max-age=0');
@@ -12,6 +12,7 @@ describe('GET /api/dashboard', () => {
     const payload = assertDashboardResponse(await response.json());
 
     expect(payload.latestMission?.isLatest).toBe(true);
+    expect(payload.latestMission?.id).toBe('mission-004');
     expect(payload.missions[0]?.id).toBe(payload.latestMission?.id);
     expect(payload.summary.total).toBeGreaterThan(0);
     expect(payload.source.name).toBe('canonical production live source');
