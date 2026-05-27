@@ -1,5 +1,6 @@
 import { existsSync, readFileSync } from 'node:fs';
 import { basename, isAbsolute, resolve } from 'node:path';
+import defaultLiveSource from './dashboard-live-source.json';
 import type { MissionRecord, MissionTimelineEventRecord } from './dashboard-types';
 
 export interface DashboardDataSource {
@@ -13,6 +14,7 @@ const SOURCE_FILE_ENV = 'AGENTS_VIS_DASHBOARD_SOURCE_FILE';
 const SOURCE_NAME_ENV = 'AGENTS_VIS_DASHBOARD_SOURCE_NAME';
 const EMPTY_RECORDS: readonly MissionRecord[] = [];
 const EMPTY_EVENT_RECORDS: readonly MissionTimelineEventRecord[] = [];
+const EMBEDDED_LIVE_SOURCE = defaultLiveSource as Record<string, unknown>;
 
 function asArray<T>(value: unknown): readonly T[] | null {
   return Array.isArray(value) ? (value as readonly T[]) : null;
@@ -74,6 +76,21 @@ function resolveSourceFile(filePath: string): string {
   return isAbsolute(filePath) ? filePath : resolve(process.cwd(), filePath);
 }
 
+function loadSourceFromParsed(parsed: Record<string, unknown>, fallbackName: string): DashboardDataSource | null {
+  const records = asArray<unknown>(parsed.records)?.filter(isMissionRecordLike) ?? null;
+  const eventRecords = asArray<unknown>(parsed.eventRecords)?.filter(isMissionTimelineEventRecordLike) ?? null;
+
+  if (!records || !eventRecords) {
+    return null;
+  }
+
+  return {
+    name: typeof parsed.sourceName === 'string' && parsed.sourceName.trim().length > 0 ? parsed.sourceName.trim() : fallbackName,
+    records,
+    eventRecords,
+  };
+}
+
 function loadSourceFromFile(filePath: string): DashboardDataSource | null {
   const resolvedPath = resolveSourceFile(filePath);
   if (!existsSync(resolvedPath)) {
@@ -83,24 +100,14 @@ function loadSourceFromFile(filePath: string): DashboardDataSource | null {
   try {
     const raw = readFileSync(resolvedPath, 'utf8');
     const parsed = JSON.parse(raw) as Record<string, unknown>;
-    const records = asArray<unknown>(parsed.records)?.filter(isMissionRecordLike) ?? null;
-    const eventRecords = asArray<unknown>(parsed.eventRecords)?.filter(isMissionTimelineEventRecordLike) ?? null;
-
-    if (!records || !eventRecords) {
-      return null;
-    }
-
-    return {
-      name:
-        typeof parsed.sourceName === 'string' && parsed.sourceName.trim().length > 0
-          ? parsed.sourceName.trim()
-          : basename(resolvedPath),
-      records,
-      eventRecords,
-    };
+    return loadSourceFromParsed(parsed, basename(resolvedPath));
   } catch {
     return null;
   }
+}
+
+function loadEmbeddedSource(): DashboardDataSource | null {
+  return loadSourceFromParsed(EMBEDDED_LIVE_SOURCE, DEFAULT_LIVE_SOURCE_FILE);
 }
 
 function applySourceNameOverride(source: DashboardDataSource, sourceName: string | undefined): DashboardDataSource {
@@ -117,13 +124,17 @@ function applySourceNameOverride(source: DashboardDataSource, sourceName: string
 export function loadDashboardDataSource(): DashboardDataSource {
   const sourceName = process.env[SOURCE_NAME_ENV]?.trim();
   const envSourceFile = process.env[SOURCE_FILE_ENV]?.trim();
-  const candidateFiles = [envSourceFile, DEFAULT_LIVE_SOURCE_FILE].filter((value): value is string => Boolean(value));
 
-  for (const filePath of candidateFiles) {
-    const fileSource = loadSourceFromFile(filePath);
+  if (envSourceFile) {
+    const fileSource = loadSourceFromFile(envSourceFile);
     if (fileSource) {
       return applySourceNameOverride(fileSource, sourceName);
     }
+  }
+
+  const embeddedSource = loadEmbeddedSource();
+  if (embeddedSource) {
+    return applySourceNameOverride(embeddedSource, sourceName);
   }
 
   return {
