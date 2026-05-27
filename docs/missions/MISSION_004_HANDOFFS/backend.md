@@ -8,6 +8,7 @@
 - The safest practical ingestion path now supported in code is polling a configured HTTPS JSON endpoint via `AGENTS_VIS_DASHBOARD_SOURCE_URL`
 - The repo-backed live source snapshot now includes Mission 004 as the latest mission
 - The code path for remote source polling is already implemented and covered by tests
+- Production now reads the canonical live source and surfaces Mission 004 with explicit stale freshness
 
 ## Current backend behavior target
 - Keep `GET /api/missions/latest` stable
@@ -26,10 +27,10 @@
 - If no canonical production source exists yet, that is the first backend blocker to solve
 - The team should prefer polling a remote JSON endpoint over webhook when the source can expose JSON directly
 - Webhook is not required
-- Production is now reading Mission 004 data, and the remaining question is whether the source should be refreshed again or left as a visible stale snapshot
+- Production is now reading Mission 004 data from the canonical live source, and stale freshness remains visible by design
 
 ## Next backend step
-Confirm or implement the canonical production live source, then keep the ingestion path and source shape stable while preserving visible stale/lag semantics in production.
+Keep the ingestion path and source shape stable while preserving visible stale/lag semantics in production.
 
 ## Live production note
 - The deployed app is serving the Mission 004 snapshot and stale freshness data

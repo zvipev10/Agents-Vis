@@ -6,6 +6,7 @@
 - The pipeline and the story presentation must both be verified
 - This run revalidated local quality gates and produced live production smoke evidence
 - The repo-backed live source snapshot now includes Mission 004 as the latest mission
+- Production smoke now shows the deployed app serving Mission 004 from the canonical live source
 
 ## QA focus
 - Verify the production URL opens successfully

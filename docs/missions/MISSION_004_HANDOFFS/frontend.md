@@ -6,6 +6,7 @@
 - The app should keep only the latest mission timeline visible
 - The frontend implementation already renders the clearer story contract and preserves chronology, parallel lanes, and freshness cues
 - The repo-backed live source snapshot now includes Mission 004 as the latest mission
+- The production UI title and rendered story now follow Mission 004 from the canonical live source
 
 ## Current frontend behavior target
 - Keep the one-timeline layout

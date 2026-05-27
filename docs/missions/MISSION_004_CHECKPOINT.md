@@ -1,12 +1,12 @@
 # Mission 004 Checkpoint
 
-Generated: 2026-05-27T12:40:00Z
+Generated: 2026-05-27T12:56:41Z
 
 ## Mission
 Mission 004: Live Truth Ingestion and Storytelling
 
 ## Current state
-Mission 004 is in progress. The repo carries a Mission 004 live-source snapshot, the local gates are green, and the latest main-branch push has reached production. The live API now returns Mission 004 and the browser title says Mission 004. Freshness is still visibly stale, so lag remains explicit.
+Mission 004 is in progress. The repo carries a Mission 004 live-source snapshot, the production app now reads the canonical live source, and the live API/browser surface show Mission 004. Freshness is still visibly stale, so lag remains explicit.
 
 ## Latest known mission scope
 - Keep the single latest-mission timeline experience
@@ -27,11 +27,11 @@ Mission 004 is in progress. The repo carries a Mission 004 live-source snapshot,
 - Mission 004 PDFs were regenerated locally with ReportLab so the repo-hosted artifacts match the updated markdown
 - The main branch was pushed with the live-source snapshot and the dynamic title fix
 - Live production smoke now confirms `https://agents-vis.vercel.app/api/missions/latest` returns Mission 004 data, `https://agents-vis.vercel.app/api/dashboard` returns Mission 004, and the page title says Mission 004
+- Production now reads the canonical live source and returns Mission 004 with stale freshness visible
 
 ## What remains
 - Keep the stale freshness visible instead of hiding lag
-- Decide whether the source should get a fresh ingest update or stay on the current lagged snapshot
-- Keep the production deployment path and any external live-source wiring documented for the next run
+- Keep the production deployment path and external live-source wiring documented for the next run
 
 ## Resume instruction
 Start by reading this checkpoint, the mission packet, and the role handoffs. Then assign the first concrete worker task needed to make the app show updated truth with a clearer story.

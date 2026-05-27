@@ -15,7 +15,7 @@ Mission 004 is about two linked things:
 - Backend and frontend implementation work has started
 - Repo checks are currently green: tests, typecheck, and build pass
 - This run revalidated the local repo successfully with `npm test`, `npm run typecheck`, and `npm run build`
-- This run rechecked production and confirmed the deployed app is now serving Mission 004 data
+- This run rechecked production and confirmed the deployed app is now serving Mission 004 data from the canonical live source
 
 ## What remains
 - Keep the stale freshness visible and decide whether the source should be refreshed again
@@ -35,7 +35,7 @@ Mission 004 is about two linked things:
 ## Live runtime note
 - Dev server may still be used for local verification
 - Production verification must happen on the deployed app
-- Production is reachable and returns 200, and the live payload now reflects Mission 004 with stale freshness data
+- Production is reachable and returns 200, and the live payload now reflects Mission 004 from the canonical live source with stale freshness data
 - Production smoke this run:
-  - `GET https://agents-vis.vercel.app/api/missions/latest` → 200, Mission 004 payload
-  - `GET https://agents-vis.vercel.app/api/dashboard` → 200, stale freshness reported
+  - `GET https://agents-vis.vercel.app/api/missions/latest` → 200, Mission 004 payload, `freshnessState: stale`
+  - `GET https://agents-vis.vercel.app/api/dashboard` → 200, Mission 004 payload, stale freshness reported
