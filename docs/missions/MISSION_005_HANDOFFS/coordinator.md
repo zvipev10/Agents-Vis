@@ -1,9 +1,9 @@
 # Mission 005 Coordinator Handoff
 
 ## Verdict
-**blocked on live runtime/database wiring**
+**canonical DB cutover verified**
 
-The repo now has the core Neon-backed architecture in place: a simple agent write endpoint, a Neon-backed store for reads/writes, preserved dashboard/latest-mission envelopes, and visible freshness/lag semantics. Backend, Frontend, Product, and QA handoffs have been refreshed, and the mission documentation PDFs now exist. The latest verification run confirmed local build/test/typecheck success, but the deployed Vercel app is currently returning `500` on `/`, `/api/dashboard`, and `/api/missions/latest`, so live cutover verification remains blocked.
+The repo now has the simplified v1 Neon-backed architecture in place: a simple agent write endpoint, a Neon-backed store for reads/writes, runtime schema bootstrap, preserved dashboard/latest-mission envelopes, and visible freshness/lag semantics. Backend, Frontend, Product, and QA handoffs have been refreshed, and the mission documentation PDFs now exist. The latest verification run confirmed local build/test/typecheck success and live Vercel verification on the canonical routes.
 
 ## What is done
 - Canonical trust boundary is implemented in code: backend validation + Neon DB are the source of truth.
@@ -11,23 +11,19 @@ The repo now has the core Neon-backed architecture in place: a simple agent writ
 - `GET /api/dashboard` and `GET /api/missions/latest` read from the Neon-backed store when DB env vars are present.
 - The UI remains read-only and still consumes the same response envelopes.
 - Freshness / lag / updated-at are preserved in the response contract.
-- DB schema and migration scaffolding exist for `missions` and `mission_events`.
+- DB schema and migration scaffolding exist for `missions` and `mission_events`, and the store bootstraps them at runtime if needed.
 - Mission 005 PDFs were generated and verified in `docs/missions/pdfs/`.
 
 ## Key gaps / caveats
-1. **Production cutover depends on deployment environment wiring.**
-   - The runtime still falls back to JSON when `NEON_DATABASE_URL` / `DATABASE_URL` is absent.
-   - That fallback is acceptable for local/dev, but it must not remain the live truth path in production/preview after cutover.
+1. **Optional historical backfill may still be needed.**
+   - The live app is now on the canonical DB-backed path and currently renders an empty state in Neon.
+   - If production/preview needs prior mission content, perform a one-time historical backfill into Neon.
 
-2. **Migration/backfill is not yet fully closed.**
-   - There is a schema migration, but no clearly executed one-time JSON-to-Neon backfill path has been verified from this environment.
-   - The boundary must be explicit: JSON may seed/bootstrap once, but new writes must go only to the simple backend API and Neon.
+2. **Historical JSON remains a bootstrap/export artifact only.**
+   - New writes go only through the simple backend API and Neon.
+   - JSON should not become the live truth path again.
 
-3. **Live deployment currently returns 500 from this environment.**
-   - The production URL is reachable, but `/`, `/api/dashboard`, and `/api/missions/latest` are returning `500`.
-   - This is a deployment / environment wiring issue, not a local code-quality issue.
-
-4. **Freshness is mostly correct at the API layer, but DB persistence still stores a freshness field on events.**
+3. **Freshness is mostly correct at the API layer, but DB persistence still stores a freshness field on events.**
    - Treat that as diagnostic/derived metadata, not a second source of truth.
    - Read-time freshness should remain based on DB timestamps and response generation time.
 
@@ -49,9 +45,8 @@ The repo now has the core Neon-backed architecture in place: a simple agent writ
 
 ## Recommended next-step dependencies
 ### Backend
-- Finish the live deployment/runtime wiring checks for Neon-backed canonical environments.
-- Confirm the live write path accepts valid payloads without any secret, nonce, or replay envelope.
 - Keep the write/read contract stable.
+- If needed, run a one-time historical backfill into Neon for prior mission content.
 
 ### Frontend
 - Keep the UI read-only.
@@ -63,8 +58,8 @@ The repo now has the core Neon-backed architecture in place: a simple agent writ
 - Verify accepted writes persist to Neon and appear through read APIs.
 - Verify freshness/lag visibility in preview or production.
 - Verify the app remains read-only for end users.
-- Verify JSON is no longer the truth path after cutover.
-- Re-run deployed smoke once the environment wiring is updated.
+- Verify JSON is not the live truth path after cutover.
+- Re-run deployed smoke if any runtime or deployment changes are made.
 
 ## Coordinator call
-Proceed with deployment/runtime verification next. Do not mark Mission 005 complete until the deployed app in the canonical environment is confirmed to return 200s on the canonical DB-backed path.
+Mission 005 can be marked complete for the v1 canonical DB cutover. Only optional historical backfill remains if product wants prior mission content loaded into Neon.
