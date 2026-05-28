@@ -37,7 +37,7 @@ The mission is now complete: the live source was refreshed again in the repo wit
 - Production is reachable and returns 200, and the live payload now reflects Mission 004 from the refreshed canonical live source
 - Local verification now pins the route test to `AGENTS_VIS_DASHBOARD_SOURCE_FILE=src/lib/dashboard-live-source.json` so the checkout matches the shipped source
 - Production smoke this run:
-  - `GET https://agents-vis.vercel.app/api/missions/latest` → 200, Mission 004 payload, `eventCount: 7`, `freshnessState: delayed`
-  - `GET https://agents-vis.vercel.app/api/dashboard` → 200, Mission 004 payload, delayed freshness reported
-- Browser title: `Mission 004`
+  - `GET https://agents-vis.vercel.app/api/missions/latest` → 200, Mission 004 payload, `eventCount: 7`, `freshnessState: stale`, `lagMs: 2164553`
+  - `GET https://agents-vis.vercel.app/api/dashboard` → 200, JSON source freshness stale, `lagMs: 2171520`
+- The deployed app still serves the single latest-mission timeline through the live source path
 - Markdown handoff updated and the matching PDF artifact was regenerated in `docs/missions/pdfs/`

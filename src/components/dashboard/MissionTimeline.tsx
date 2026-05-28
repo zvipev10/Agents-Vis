@@ -14,12 +14,12 @@ interface TimelineGroup {
 
 function formatDateTime(value: string | null): string {
   if (!value) {
-    return 'Timestamp unavailable';
+    return 'Updated at unavailable';
   }
 
   const parsed = new Date(value);
   if (Number.isNaN(parsed.getTime())) {
-    return 'Timestamp unavailable';
+    return 'Updated at unavailable';
   }
 
   return new Intl.DateTimeFormat('en', {
@@ -48,18 +48,24 @@ function lagMinutes(generatedAt: string, updatedAt: string | null): number | nul
   return Math.max(0, Math.round((generated - source) / 60000));
 }
 
-function freshnessTone(dashboard: DashboardResponse): 'fresh' | 'partial' | 'stale' | 'empty' {
+function freshnessTone(dashboard: DashboardResponse): 'fresh' | 'partial' | 'delayed' | 'stale' | 'empty' {
   if (dashboard.summary.total === 0) {
     return 'empty';
   }
 
   const minutesBehind = lagMinutes(dashboard.generatedAt, dashboard.source.updatedAt);
-  if (minutesBehind !== null && minutesBehind >= 5) {
+  const sourceFreshness = dashboard.source.freshness;
+
+  if (sourceFreshness === 'stale' || (minutesBehind !== null && minutesBehind >= 15)) {
     return 'stale';
   }
 
-  if (dashboard.source.freshness === 'partial') {
+  if (sourceFreshness === 'partial') {
     return 'partial';
+  }
+
+  if (sourceFreshness === 'delayed' || (minutesBehind !== null && minutesBehind >= 1)) {
+    return 'delayed';
   }
 
   return 'fresh';
@@ -70,6 +76,10 @@ function freshnessLabel(tone: ReturnType<typeof freshnessTone>): string {
     return 'Live';
   }
 
+  if (tone === 'delayed') {
+    return 'Delayed';
+  }
+
   if (tone === 'partial') {
     return 'Partial feed';
   }
@@ -78,7 +88,7 @@ function freshnessLabel(tone: ReturnType<typeof freshnessTone>): string {
     return 'Stale';
   }
 
-  return 'Empty';
+  return 'No mission data yet';
 }
 
 function statusLabel(status: MissionCardData['status']): string {
@@ -149,6 +159,10 @@ function freshnessBadgeClass(freshness: MissionTimelineEvent['freshness']): stri
     return 'badge--partial';
   }
 
+  if (freshness === 'delayed') {
+    return 'badge--delayed';
+  }
+
   if (freshness === 'stale') {
     return 'badge--stale';
   }
@@ -162,7 +176,7 @@ function freshnessEventLabel(freshness: MissionTimelineEvent['freshness']): stri
   }
 
   if (freshness === 'partial') {
-    return 'Partial';
+    return 'Partial feed';
   }
 
   if (freshness === 'stale') {
@@ -178,14 +192,22 @@ function freshnessEventLabel(freshness: MissionTimelineEvent['freshness']): stri
 
 function timelineLagLabel(freshness: ReturnType<typeof freshnessTone>, lag: number | null): string {
   if (lag === null) {
-    return 'Lag cannot be calculated yet';
+    return 'Lag unavailable';
   }
 
   if (freshness === 'stale') {
-    return `Stale by about ${lag} minute${lag === 1 ? '' : 's'}`;
+    return `Stale by about ${lag} minute${lag === 1 ? '' : 's'} behind live clock`;
   }
 
-  return `${lag} minute${lag === 1 ? '' : 's'} behind the live clock`;
+  if (freshness === 'delayed') {
+    return `Delayed by about ${lag} minute${lag === 1 ? '' : 's'} behind live clock`;
+  }
+
+  if (freshness === 'partial') {
+    return `Partial feed · ${lag} minute${lag === 1 ? '' : 's'} behind live clock`;
+  }
+
+  return 'Live · in sync with the live clock';
 }
 
 export function MissionTimeline({ dashboard }: MissionTimelineProps) {
@@ -218,13 +240,13 @@ export function MissionTimeline({ dashboard }: MissionTimelineProps) {
       <div className="mission-timeline__meta-row" aria-label="Timeline metadata">
         <div className="mission-timeline__meta-card">
           <span className="mission-timeline__meta-label">Mission focus</span>
-          <strong>{latestMission ? latestMission.title : 'No mission history yet'}</strong>
-          <span>{latestMission ? statusLabel(latestMission.status) : 'Waiting for the next live event'}</span>
+          <strong>{latestMission ? latestMission.title : 'No mission data yet'}</strong>
+          <span>{latestMission ? statusLabel(latestMission.status) : 'Waiting for the first canonical mission to appear.'}</span>
         </div>
         <div className="mission-timeline__meta-card">
           <span className="mission-timeline__meta-label">Who acted</span>
           <strong>{missionActorLabel(latestMission)}</strong>
-          <span>{latestMission ? latestMission.action : 'The story will appear once the latest mission emits its first update.'}</span>
+          <span>{latestMission ? latestMission.action : 'The latest mission will describe who acted once it begins.'}</span>
         </div>
         <div className="mission-timeline__meta-card">
           <span className="mission-timeline__meta-label">Why it matters</span>
@@ -232,7 +254,7 @@ export function MissionTimeline({ dashboard }: MissionTimelineProps) {
           <span>{latestMission ? latestMission.detail : 'Detail will appear here when the latest mission includes agent-written context.'}</span>
         </div>
         <div className="mission-timeline__meta-card">
-          <span className="mission-timeline__meta-label">Freshness</span>
+          <span className="mission-timeline__meta-label">Updated at</span>
           <strong>{formatDateTime(dashboard.source.updatedAt)}</strong>
           <span>{timelineLagLabel(freshness, lag)}</span>
         </div>
@@ -338,9 +360,9 @@ export function MissionTimeline({ dashboard }: MissionTimelineProps) {
                   <span className="timeline-event__index">01</span>
                   <span className="timeline-event__time">No recorded steps yet</span>
                 </div>
-                <h3 className="timeline-event__title">The latest mission is ready, but its event stream has not started</h3>
+                <h3 className="timeline-event__title">No mission data yet</h3>
                 <p className="timeline-event__body">
-                  As soon as the mission emits events, this area will fill with the ordered story and keep any parallel work grouped.
+                  The latest mission will appear here once the first canonical event stream starts.
                 </p>
               </div>
             </article>
@@ -353,12 +375,22 @@ export function MissionTimeline({ dashboard }: MissionTimelineProps) {
                 <span className="timeline-event__time">Freshness monitor</span>
               </div>
               <h3 className="timeline-event__title">
-                {freshness === 'stale' ? 'The feed is stale and should be treated as lagging' : 'The feed is still current enough for live replay'}
+                {freshness === 'stale'
+                  ? 'This view is stale and should be treated as lagging'
+                  : freshness === 'delayed'
+                    ? 'This view is delayed but still usable'
+                    : freshness === 'partial'
+                      ? 'This view is partial and some fields are still missing'
+                      : 'This view is live and current'}
               </h3>
               <p className="timeline-event__body">
                 {freshness === 'stale'
                   ? 'New events are overdue compared with the latest source update, so the UI should visibly warn the user.'
-                  : 'When the source slows down, this slot will surface stale or delayed data instead of silently hiding the gap.'}
+                  : freshness === 'delayed'
+                    ? 'The view is behind the live clock, but the timeline still remains readable and useful.'
+                    : freshness === 'partial'
+                      ? 'Some content is still missing, so the UI labels the gaps without hiding the timeline.'
+                      : 'The dashboard is current and ready for read-only replay.'}
               </p>
               <div className="timeline-event__footer">
                 <span className="badge badge--source">{parallelGroupCount} parallel group{parallelGroupCount === 1 ? '' : 's'}</span>
@@ -371,7 +403,7 @@ export function MissionTimeline({ dashboard }: MissionTimelineProps) {
 
       <div className="mission-timeline__footer">
         <span>Source: {dashboard.source.name}</span>
-        <span>Generated: {formatDateTime(dashboard.generatedAt)}</span>
+        <span>Generated at: {formatDateTime(dashboard.generatedAt)}</span>
       </div>
     </section>
   );

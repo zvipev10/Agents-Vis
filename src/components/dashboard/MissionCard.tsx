@@ -9,12 +9,12 @@ interface MissionCardProps {
 
 function formatUpdatedAt(updatedAt: string | null): string {
   if (!updatedAt) {
-    return 'Timestamp unavailable';
+    return 'Updated at unavailable';
   }
 
   const parsed = new Date(updatedAt);
   if (Number.isNaN(parsed.getTime())) {
-    return 'Timestamp unavailable';
+    return 'Updated at unavailable';
   }
 
   return new Intl.DateTimeFormat('en', {
@@ -52,6 +52,7 @@ export function MissionCard({ mission, featured = false }: MissionCardProps) {
     <article className={`panel panel-padding mission-card ${featured ? 'mission-card--featured' : ''}`} aria-label={mission.title}>
       <div className="mission-card__topline">
         {mission.isLatest ? <span className="badge badge--latest">Latest mission</span> : null}
+        {mission.isPartial ? <span className="badge badge--partial">Partial feed</span> : null}
         <span className={`badge ${statusClass(mission.status)}`}>{statusLabel(mission.status)}</span>
       </div>
 
@@ -63,7 +64,10 @@ export function MissionCard({ mission, featured = false }: MissionCardProps) {
 
       <ul className="mission-meta" aria-label="Mission metadata">
         <li>{mission.title}</li>
-        <li>{formatUpdatedAt(mission.updatedAt)}</li>
+        <li>
+          <span className="mission-meta__label">Updated at</span>
+          <span>{formatUpdatedAt(mission.updatedAt)}</span>
+        </li>
       </ul>
     </article>
   );

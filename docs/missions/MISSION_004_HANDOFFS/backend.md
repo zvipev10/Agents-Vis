@@ -36,7 +36,8 @@
 Keep the ingestion path and source shape stable while preserving visible freshness semantics in production, and refresh the canonical live source as new truth arrives.
 
 ## Live production note
-- The deployed app is serving the Mission 004 snapshot and delayed freshness data
-- Production smoke this run confirmed `GET /api/missions/latest` is Mission 004 with 7 events and `GET /api/dashboard` reports delayed freshness
-- Browser title smoke confirmed `Mission 004`
+- The deployed app is serving the Mission 004 snapshot and visible stale freshness data
+- Production smoke this run confirmed `GET /api/missions/latest` is Mission 004 with 7 events and `GET /api/dashboard` reports stale freshness with visible lag
+- Current smoke from this run shows `lagMs: 2164553` on `/api/missions/latest` and `lagMs: 2171520` on `/api/dashboard`
+- The deployed app still serves the single latest-mission timeline through the live source path
 - Markdown handoff updated and the matching PDF artifact was regenerated in `docs/missions/pdfs/`

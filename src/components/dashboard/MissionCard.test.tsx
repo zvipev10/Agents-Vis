@@ -13,7 +13,7 @@ const mission = {
   action: 'reframed the delivery gates',
   updatedAt: '2026-05-26T10:05:00.000Z',
   isLatest: true,
-  isPartial: false,
+  isPartial: true,
 };
 
 describe('MissionCard', () => {
@@ -23,7 +23,9 @@ describe('MissionCard', () => {
     expect(screen.getByRole('heading', { name: mission.headline })).toBeInTheDocument();
     expect(screen.getByText(mission.detail)).toBeInTheDocument();
     expect(screen.getByText('Latest mission')).toBeInTheDocument();
+    expect(screen.getByText('Partial feed')).toBeInTheDocument();
     expect(screen.getByText('Running')).toBeInTheDocument();
+    expect(screen.getByText('Updated at')).toBeInTheDocument();
     expect(screen.queryByRole('button')).not.toBeInTheDocument();
     expect(screen.queryByText(/edit/i)).not.toBeInTheDocument();
   });

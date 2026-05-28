@@ -1,8 +1,8 @@
-%PDF-1.3
+%PDF-1.4
 %“Œ‹ž ReportLab Generated PDF document (opensource)
 1 0 obj
 <<
-/F1 2 0 R
+/F1 2 0 R /F2 3 0 R
 >>
 endobj
 2 0 obj
@@ -12,7 +12,12 @@ endobj
 endobj
 3 0 obj
 <<
-/Contents 7 0 R /MediaBox [ 0 0 612 792 ] /Parent 6 0 R /Resources <<
+/BaseFont /Courier /Encoding /WinAnsiEncoding /Name /F2 /Subtype /Type1 /Type /Font
+>>
+endobj
+4 0 obj
+<<
+/Contents 8 0 R /MediaBox [ 0 0 612 792 ] /Parent 7 0 R /Resources <<
 /Font 1 0 R /ProcSet [ /PDF /Text /ImageB /ImageC /ImageI ]
 >> /Rotate 0 /Trans <<
 
@@ -20,49 +25,58 @@ endobj
   /Type /Page
 >>
 endobj
-4 0 obj
-<<
-/PageMode /UseNone /Pages 6 0 R /Type /Catalog
->>
-endobj
 5 0 obj
 <<
-/Author (anonymous) /CreationDate (D:20260527194840+03'00') /Creator (anonymous) /Keywords () /ModDate (D:20260527194840+03'00') /Producer (ReportLab PDF Library - \(opensource\)) 
-  /Subject (unspecified) /Title (backend) /Trapped /False
+/PageMode /UseNone /Pages 7 0 R /Type /Catalog
 >>
 endobj
 6 0 obj
 <<
-/Count 1 /Kids [ 3 0 R ] /Type /Pages
+/Author (\(anonymous\)) /CreationDate (D:20260527201453+03'00') /Creator (\(unspecified\)) /Keywords () /ModDate (D:20260527201453+03'00') /Producer (ReportLab PDF Library - \(opensource\)) 
+  /Subject (\(unspecified\)) /Title (\(anonymous\)) /Trapped /False
 >>
 endobj
 7 0 obj
 <<
-/Filter [ /ASCII85Decode /FlateDecode ] /Length 1904
+/Count 1 /Kids [ 4 0 R ] /Type /Pages
+>>
+endobj
+8 0 obj
+<<
+/Length 3480
 >>
 stream
-Gat%$gN)%,&:Ml+lqCa6:1WX-3H'*->ZrNF`(Kl>6NeYX!XTVBV'o^.?%A_A8!'X4R:[WUHT='4p94Y_j.Co&Djg]3boq?kJADfZ9,NW6`\>/]S,&!=pV-ZUGkcDX"dk8-Ho-J$#-V@M-Y]^43V<2Y\74\lj;^@fSEo;-&"*BIq4C/P&#XOGpp7dr7",G\F]KpL"HNfQ&,j\b:)VI](JC/(%a9N/$W(joHHqam%5M8slfckM*/Oll?M(;VEt#=PHJ8^&KV2(P6=CY>]__t(0](9hg&q$YL!dP,.8/!mV22$/T,gL#BULpibQ3?\jZ8_W;luG$*O*+3WIUg'^)H>S?SXqSAks\B:6-Z2b3B<N$Y@/B',LW81e,J7W_?Ij6sSG4Ys![X!4@jS/Yo3t,'WRqPAr*-JRTY.`3:D"mVjZ[UR5UiBS/7)%j9D-d%(qU+l"RL7H[=S.LeTA0V@7Y_dE.F4p,ufOb9cHn9Fd.k4:]Ac8ZBuro*apqhOL\q[Zb80#(^Wgjf.np$L#A\$*9%n["uK08q<$cND9NpL82EfX5malQ(/2WfeU*D49&2,dcD!C`Kg]i\Bt"dJY#HC"HmuEC._l%8_fR6DK&ISa*="e/!D(Uc+gH?h<@H5We7aGTQ-.@VLL$A$c>.NrhS'D/#:eI0.2Z@f>;!Tk#VnNi\,(1V!eXn[.n%F(++Z:M.KK.n%4<3AA_b"3AHa;Zl#&QWUk<:i$^nE.R2-Y.FQ*4Z9Y(@Xl%\o0AZVj"ZtGU5CoJ:E)_2;q;BF6EJj@Ood>D&gtPWlKS0bjU3-ehk7uq67*H5C_BkF8Gt*hM,oAKG+`fS=%*GlB2O7C?fF?UrH=9ED02qG??rc_iHQ[E.XHDg0l*C6QsiSn"ds<<Q&CcDTrc2Yc_g+$%@\I`$@7FQ"G7?^[pgje<h[$O2XG\oifp8bYk@r/3-@"LfTN$NZofCJg-PQXOJJGNS$@8+`s[5BZ]c1aT%'-7la.p/!.cFS9X;qk_$RZaIL"(VM=ZVQn$EBNlmf-4[IhO_C(K)KpsLL/]c<)F:T)Tr/Q7i+%/5>=.[3C0+G[TbpoRRH(".Dj[&%ls]\=5(iCu8)qaDqKInfCpLC&s,'?nKI/deHL*f340q(@RQ_U]K[>0c,IK5ipNXR[f"_C[pQFQJqD*Hc0hB?^Mo<%<pF9_)<tJsri]C%O'sin9Jb*W$F'(jKVO7MFKA0i*sLe8ZB*qUW1D=EV(/P^[E"+R!3[OBuk`EU@">h^"%e]<`5mTj3g_(gQqJYNmai=n6>Y$aC`EPKO^?A:*3FHl\.qmu_-Sk(ts0U?!NWbcVbN);auQ0[t+9_s0?ZjjEk4`R;-SX\uAD-X6hW'u-H[qnM)d:I(:^=.1*m`QP6NaFU5Y=$-*V%0Jp_-D@$DSMhFuC>/2B8fT^ZY;Eph9`qKk.k,KY4sCq](q@A52o<N)p=iPcJn6fR;%f54Zs6nu@_,m+$k)F?@]f;-G4gMi?kJ^G9l6q0>T-j1C*0QiGYsCk5?183ZGYJtQ?YCgV(ld;7;IF1!pGE<r3fT"/VGpIr@acW[&dS"@4fIAW@S5?X`0[DD6K53?dRT%eWd*JVbag^iPBAY(-c);6,Wk+rkbigCANdZpD0uJGKgIlfaPMiWCV7::A:&^XEupCAW,C+plSsrH]ug6QW(F/hQXJ)kh>O$/s.Lih_NCmHt:R_Ob7d:qJ8tG'1D8S&eo3Gm,Db?R'fF0X<mG;76q'WOeE8Fm@to-+kVU'nViH/BlBb?DfA$Y?1ZrU-GuK(gnHo?kg+m@[_Au`=am*8b3DrPr9-(oEVB.8iZT4eF(OtR0gg`aO@Q"D<\LRqj"`i4*6T^A2I,]kggC&1BiJH[iG4=R,\&H4e,=B)duMgXiargX<F<#WGp[e++)0t3@f~>endstream
+1 0 0 1 0 0 cm  BT /F1 12 Tf 14.4 TL ET
+q
+1 0 0 1 42 311.4 cm
+%PreformattedPara
+0 0 0 rg
+BT 1 0 0 1 36 430.1 Tm /F2 8.5 Tf 10.2 TL (# Mission 004 Backend Handoff) Tj T*  T* (## Completed) Tj T* (- Mission 004 is defined as the live-truth ingestion mission) Tj T* (- The backend keeps the timeline API read-only and production-safe) Tj T* (- The backend points at a canonical production live source for the final release) Tj T* (- The backend also ingests updates into that source so the displayed truth stays current) Tj T* (- The safest practical ingestion path supported in code is polling a configured HTTPS JSON endpoint via `AGENTS_VIS_DASHBOARD_SOURCE_URL`) Tj T* (- The repo-backed live source snapshot now includes Mission 004 as the latest mission) Tj T* (- The code path for remote source polling is implemented and covered by tests) Tj T* (- Production now reads the refreshed canonical live source snapshot and surfaces Mission 004 with explicit delayed freshness) Tj T* (- This run added a new Mission 004 verification event to the canonical source so the live timeline stays current) Tj T*  T* (## Current backend behavior target) Tj T* (- Keep `GET /api/missions/latest` stable) Tj T* (- Keep latest-mission-only selection) Tj T* (- Keep chronological ordering) Tj T* (- Keep parallel metadata intact) Tj T* (- Keep freshness / delayed / stale / lag fields intact) Tj T* (- Keep cache behavior predictable in production) Tj T* (- Keep ingestion safe, explicit, and resumable) Tj T* (- Document each backend step in a PDF artifact stored in the repo at `docs/missions/pdfs/`) Tj T* (- This run revalidated the backend locally with the full repo test suite, typecheck, and build, then the live deployment picked up the refreshed Mission 004 snapshot) Tj T*  T* (## Production source target) Tj T* (- The final release should not depend on a frozen snapshot) Tj T* (- The production live source is explicit and verifiable) Tj T* (- The repo has a verified live JSON source to point at: `https://raw.githubusercontent.com/zvipev10/Agents-Vis/main/src/lib/dashboard-live-source.json`) Tj T* (- This run verified that `AGENTS_VIS_DASHBOARD_SOURCE_URL` can poll that live JSON source locally and return Mission 004) Tj T* (- The remaining backend work is now just ongoing refresh hygiene, not a release blocker) Tj T* (- The team should prefer polling a remote JSON endpoint over webhook when the source can expose JSON directly) Tj T* (- Webhook is not required) Tj T* (- Production is reading Mission 004 data from the refreshed canonical live source snapshot, and delayed freshness remains visible by design) Tj T*  T* (## Next backend step) Tj T* (Keep the ingestion path and source shape stable while preserving visible freshness semantics in production, and refresh the canonical live source as new truth arrives.) Tj T*  T* (## Live production note) Tj T* (- The deployed app is serving the Mission 004 snapshot and visible stale freshness data) Tj T* (- Production smoke this run confirmed `GET /api/missions/latest` is Mission 004 with 7 events and `GET /api/dashboard` reports stale freshness with visible lag) Tj T* (- Current smoke from this run shows `lagMs: 2164553` on `/api/missions/latest` and `lagMs: 2171520` on `/api/dashboard`) Tj T* (- The deployed app still serves the single latest-mission timeline through the live source path) Tj T* (- Markdown handoff updated and the matching PDF artifact was regenerated in `docs/missions/pdfs/`) Tj T* ET
+Q
+ 
+endstream
 endobj
 xref
-0 8
+0 9
 0000000000 65535 f 
 0000000061 00000 n 
-0000000092 00000 n 
-0000000199 00000 n 
-0000000392 00000 n 
-0000000460 00000 n 
-0000000720 00000 n 
-0000000779 00000 n 
+0000000102 00000 n 
+0000000209 00000 n 
+0000000314 00000 n 
+0000000507 00000 n 
+0000000575 00000 n 
+0000000855 00000 n 
+0000000914 00000 n 
 trailer
 <<
 /ID 
-[<ff91cb90577668405c6a973018fd60b8><ff91cb90577668405c6a973018fd60b8>]
+[<ec365eb577550a8928b3e54d15384548><ec365eb577550a8928b3e54d15384548>]
 % ReportLab generated PDF document -- digest (opensource)
 
-/Info 5 0 R
-/Root 4 0 R
-/Size 8
+/Info 6 0 R
+/Root 5 0 R
+/Size 9
 >>
 startxref
-2774
+4445
 %%EOF

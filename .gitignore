@@ -35,3 +35,4 @@ coverage/
 build/
 .worktrees/
 tsconfig.tsbuildinfo
+.vercel

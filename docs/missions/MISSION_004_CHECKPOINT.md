@@ -9,9 +9,9 @@ Mission 004: Live Truth Ingestion and Storytelling
 Mission 004 is complete. The canonical live JSON source was refreshed again in the repo with a new Mission 004 verification event, production ingests the refreshed feed, and the deployed app shows Mission 004 with freshness lag visible instead of hidden.
 
 ## Current production smoke from this run:
-- `GET https://agents-vis.vercel.app/api/missions/latest` → Mission 004, `eventCount: 7`, `freshnessState: delayed`, `lagMs: 586166`
-- `GET https://agents-vis.vercel.app/api/dashboard` → Mission 004, delayed freshness still visible, `lagMs: 588161`
-- Browser title: `Mission 004`
+- `GET https://agents-vis.vercel.app/api/missions/latest` → 200, Mission 004, `eventCount: 7`, `freshnessState: stale`, `lagMs: 2164553`
+- `GET https://agents-vis.vercel.app/api/dashboard` → 200, JSON source freshness stale, `lagMs: 2171520`
+- The deployed app still serves the single latest-mission timeline through the live source path
 
 ## Current local verification from this run:
 - `AGENTS_VIS_DASHBOARD_SOURCE_FILE=src/lib/dashboard-live-source.json`

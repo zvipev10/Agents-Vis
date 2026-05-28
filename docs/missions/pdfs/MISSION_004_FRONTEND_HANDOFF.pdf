@@ -1,8 +1,8 @@
-%PDF-1.3
+%PDF-1.4
 %“Œ‹ž ReportLab Generated PDF document (opensource)
 1 0 obj
 <<
-/F1 2 0 R
+/F1 2 0 R /F2 3 0 R
 >>
 endobj
 2 0 obj
@@ -12,7 +12,12 @@ endobj
 endobj
 3 0 obj
 <<
-/Contents 7 0 R /MediaBox [ 0 0 612 792 ] /Parent 6 0 R /Resources <<
+/BaseFont /Courier /Encoding /WinAnsiEncoding /Name /F2 /Subtype /Type1 /Type /Font
+>>
+endobj
+4 0 obj
+<<
+/Contents 8 0 R /MediaBox [ 0 0 612 792 ] /Parent 7 0 R /Resources <<
 /Font 1 0 R /ProcSet [ /PDF /Text /ImageB /ImageC /ImageI ]
 >> /Rotate 0 /Trans <<
 
@@ -20,49 +25,58 @@ endobj
   /Type /Page
 >>
 endobj
-4 0 obj
-<<
-/PageMode /UseNone /Pages 6 0 R /Type /Catalog
->>
-endobj
 5 0 obj
 <<
-/Author (anonymous) /CreationDate (D:20260527194840+03'00') /Creator (anonymous) /Keywords () /ModDate (D:20260527194840+03'00') /Producer (ReportLab PDF Library - \(opensource\)) 
-  /Subject (unspecified) /Title (frontend) /Trapped /False
+/PageMode /UseNone /Pages 7 0 R /Type /Catalog
 >>
 endobj
 6 0 obj
 <<
-/Count 1 /Kids [ 3 0 R ] /Type /Pages
+/Author (\(anonymous\)) /CreationDate (D:20260527201453+03'00') /Creator (\(unspecified\)) /Keywords () /ModDate (D:20260527201453+03'00') /Producer (ReportLab PDF Library - \(opensource\)) 
+  /Subject (\(unspecified\)) /Title (\(anonymous\)) /Trapped /False
 >>
 endobj
 7 0 obj
 <<
-/Filter [ /ASCII85Decode /FlateDecode ] /Length 1427
+/Count 1 /Kids [ 4 0 R ] /Type /Pages
+>>
+endobj
+8 0 obj
+<<
+/Length 2495
 >>
 stream
-Gat%"gQ(#H&:Ml+%$6g_=D*&E]jBd%8JbYh.0A"E%kWemeeBQpPSO4HLSQ?AMl"m3Z1<mEgGrnY(,2Z$7<k+-^i)<EIp0Ws$+gN[`VT^[TAfP#S+QYAI)!=A],1sX$[>cj@Fr<,\*ugg/$sp(]RVB)Ps`OL&#Qk>WaB0.&+"anjna#XYJ:(kU55](_FNFh&fpPUU%pG`SmB;Y/9%\D64V4kWtD-eiQR_8eNfgZFkW?u"tNa&4)!X0XI%2lI.4Ed>Ml$g@)IZ'oZHr&.s[.UKfVbpSHSY3;\.W>.FtqH6u4FX,9]tId(0o(374Cp9].1tfLsF-hJ=NnX+Z/"#F\bJ;Bdo1@eNXH#t+NDcs),<bm>td2-na1+3o)W1;fnU8O4f4GN!($-YrQH-Te^2E7VuR*.tAbm9+][6p)/kF_=<m;6715G+`pf6C"k:'Z(R,K\od0nm779`9YoOcTGASGgD6L_$@[CF9%"XSC!'aPg"EfGXCNU@dlJ]&?BC`48[M:("VL,=O"2MhCQ)[^S@2)>'m@(8J!*e1C(R$J"FITPLpQ.e;=O'@[6;]]DV?p@kkZGJNRu3$MC#(DnTFONEu=!:Bh=$Uln:pFLeTY2ZLVQ6^$2Fdi(q'q?2.^3!jEJYN\[2)+qNP+@N%_Jg)7tMh$)0g.6X;cF[>"?P\l::(jg;K4\/H?,[&:Z]c.EaLh$%#Y1jS9g#^Pk:*jBBc&kmbgq-c9YPeSMhL([_I'5O#J#/m0$'p;%VGlt>BZ=$nN^;FQXF=gOH'f.9g.]<P92CQi6*)$?6qLWdNt__KLAkl(KO^0,pBrUq"j4]QuU";btqcq')g_mM<A.q0=mtACcY#J:J;*j]&quNkY:?*k]caC-RQETE:(!@2C.VcJF/$-4)j?ub8SQ6Ceae%8H'd&%ZMYSc6<m[Zq_KAkgB/.%]Ia-J1.>a>aP/5BK5_"jd!OZT!_Z_DR4pJ[[SQ;^B[@@F6=o#0-6#&=unOb:8Z<#@Cgs/-jN7r1R`M6<Cgh"cd:!IUJ'sL%Y5tqGr+i_]b/PVI[h6B":[G%Ue96b+JB1L`Xru&+!_r2i/\g+Y$XlR_/q7=[A89WIBA'ahYN\O4*mL3iYpr!@E'P[rhl\!Jkk-D\(]];kV5YY<0(r=+dL.fOX<\BR%JoJE]T<V7ebKO,oi>R[$:4YQ-jcA\lTMd99=nuB`6kWN5iNj7AA%>0;\!fjt1]kmAS^i`c<BH1%eg^"NOBte8m=bDiAZe+K[d%E/#+0#>^q$oPA<j[cB;,bhcWbMq?Rrk`CC52"?Tn<=..,Q[m%tB=^E_1!e6'I^6]KI6Q_g]\8<Brel#Eh'2G+LL',pXI`7*ZAoAo:(rngjZH(BYbiEt&S6LWg[k;i+QIe?Kpa1;]n/:_l@X\6n/`JrF(O`-J(=,M(A5H=,eWphqJa_^~>endstream
+1 0 0 1 0 0 cm  BT /F1 12 Tf 14.4 TL ET
+q
+1 0 0 1 42 423.6 cm
+%PreformattedPara
+0 0 0 rg
+BT 1 0 0 1 36 317.9 Tm /F2 8.5 Tf 10.2 TL (# Mission 004 Frontend Handoff) Tj T*  T* (## Completed) Tj T* (- Mission 004 is defined as the live-truth and story-refactor mission) Tj T* (- The UI remains read-only and single-view) Tj T* (- The app keeps only the latest mission timeline visible) Tj T* (- The frontend renders the clearer story contract and preserves chronology, parallel lanes, and freshness cues) Tj T* (- The repo-backed live source snapshot now includes Mission 004 as the latest mission) Tj T* (- The live source was refreshed again with a new verification event so the timeline story stays current) Tj T*  T* (## Current frontend behavior target) Tj T* (- Keep the one-timeline layout) Tj T* (- Keep chronology and parallel lanes visible) Tj T* (- Keep freshness / lag / stale indicators visible) Tj T* (- Improve the wording and structure of timeline entries so the story reads clearly) Tj T* (- Keep the UI consumer-friendly and avoid turning it into a second summary dashboard) Tj T* (- Continue rendering the remote-source payload without changing the visible single-timeline experience) Tj T* (- Document each frontend step in a PDF artifact stored in the repo) Tj T* (- This run revalidated the frontend locally as part of the passing test suite, typecheck, and build; the mission PDFs were regenerated in `docs/missions/pdfs/`) Tj T*  T* (## Story refactor target) Tj T* (- The frontend should render the story the agents produce, not invent a new summary layer) Tj T* (- The writing contract should make each update understandable in context) Tj T* (- The UI should highlight who did what, why it mattered, and what changed next) Tj T* (- The frontend should keep the timeline readable as the live source changes) Tj T* (- The browser title follows the latest mission, so the visible page now says Mission 004) Tj T* (- Local verification now uses the repo-backed live source file override in the route test, so the frontend view tracks the shipped source) Tj T* (- Production smoke confirms the timeline renders Mission 004 with delayed freshness, and the live API now reports stale freshness with visible lag) Tj T*  T* (## Next frontend step) Tj T* (Keep the one-timeline layout readable and preserve the freshness state so lag remains visible in the UI.) Tj T* (- Markdown handoff updated and the matching PDF artifact was regenerated in `docs/missions/pdfs/`) Tj T* ET
+Q
+ 
+endstream
 endobj
 xref
-0 8
+0 9
 0000000000 65535 f 
 0000000061 00000 n 
-0000000092 00000 n 
-0000000199 00000 n 
-0000000392 00000 n 
-0000000460 00000 n 
-0000000721 00000 n 
-0000000780 00000 n 
+0000000102 00000 n 
+0000000209 00000 n 
+0000000314 00000 n 
+0000000507 00000 n 
+0000000575 00000 n 
+0000000855 00000 n 
+0000000914 00000 n 
 trailer
 <<
 /ID 
-[<2305b6aa7e7d483b7a53a754f8f9d229><2305b6aa7e7d483b7a53a754f8f9d229>]
+[<819a7c09dc7ac74206879ce5bb0939ca><819a7c09dc7ac74206879ce5bb0939ca>]
 % ReportLab generated PDF document -- digest (opensource)
 
-/Info 5 0 R
-/Root 4 0 R
-/Size 8
+/Info 6 0 R
+/Root 5 0 R
+/Size 9
 >>
 startxref
-2298
+3460
 %%EOF

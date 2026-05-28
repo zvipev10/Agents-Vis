@@ -29,10 +29,10 @@
 
 ## Smoke evidence
 - Production URL opens successfully with HTTP 200
-- Production API returns the Mission 004 payload, and the title also reflects Mission 004
+- Production API returns the Mission 004 payload
 - Live API smoke from this run:
-  - `GET https://agents-vis.vercel.app/api/missions/latest` → 200, Mission 004 payload, `eventCount: 7`, `freshnessState: delayed`
-  - `GET https://agents-vis.vercel.app/api/dashboard` → 200, delayed freshness reported
-- Browser title: `Mission 004`
+  - `GET https://agents-vis.vercel.app/api/missions/latest` → 200, Mission 004 payload, `eventCount: 7`, `freshnessState: stale`, `lagMs: 2164553`
+  - `GET https://agents-vis.vercel.app/api/dashboard` → 200, stale freshness reported with visible lag, `lagMs: 2171520`
+- The deployed app still serves the single latest-mission timeline through the live source path
 - Local verification in this run pinned the route test to the repo-backed live source file and passed with the refreshed Mission 004 payload
 - Markdown handoff updated and the matching PDF artifact was regenerated in `docs/missions/pdfs/`

@@ -1,6 +1,7 @@
 import { render, screen } from '@testing-library/react';
 import { describe, expect, it } from 'vitest';
 import { buildDashboardResponse } from '../../lib/dashboard-data';
+import type { DashboardResponse } from '../../lib/dashboard-types';
 import { DashboardShell } from './DashboardShell';
 
 const readyDashboard = buildDashboardResponse(
@@ -67,6 +68,39 @@ const readyDashboard = buildDashboardResponse(
   ],
 );
 
+type DashboardTestOverrides = {
+  [K in keyof DashboardResponse]?: K extends 'source'
+    ? Partial<DashboardResponse['source']>
+    : K extends 'summary'
+      ? Partial<DashboardResponse['summary']>
+      : K extends 'timeline'
+        ? Partial<Omit<DashboardResponse['timeline'], 'source'>> & { source?: Partial<DashboardResponse['timeline']['source']> }
+        : DashboardResponse[K];
+};
+
+function dashboardWith(overrides: DashboardTestOverrides): DashboardResponse {
+  return {
+    ...readyDashboard,
+    ...overrides,
+    source: {
+      ...readyDashboard.source,
+      ...overrides.source,
+    },
+    summary: {
+      ...readyDashboard.summary,
+      ...overrides.summary,
+    },
+    timeline: {
+      ...readyDashboard.timeline,
+      ...overrides.timeline,
+      source: {
+        ...readyDashboard.timeline.source,
+        ...(overrides.timeline?.source ?? {}),
+      },
+    },
+  };
+}
+
 describe('DashboardShell', () => {
   it('shows a loading state before data is ready', () => {
     render(<DashboardShell state={{ status: 'loading' }} />);
@@ -80,6 +114,9 @@ describe('DashboardShell', () => {
     expect(screen.getByRole('heading', { name: 'Reconnect the visibility brief' })).toBeInTheDocument();
     expect(screen.getByRole('heading', { name: 'One mission, one timeline' })).toBeInTheDocument();
     expect(screen.getByText('Latest mission only')).toBeInTheDocument();
+    expect(screen.getByText('Live')).toBeInTheDocument();
+    expect(screen.getByText('Updated at')).toBeInTheDocument();
+    expect(screen.getByText(/behind the live clock|in sync with the live clock/)).toBeInTheDocument();
     expect(screen.getByRole('heading', { name: 'Ari · Coordinator' })).toBeInTheDocument();
     expect(screen.getByText('Ari · Coordinator', { selector: 'strong' })).toBeInTheDocument();
     expect(screen.getByText('reframed the delivery gates', { selector: 'span' })).toBeInTheDocument();
@@ -91,10 +128,54 @@ describe('DashboardShell', () => {
     expect(screen.queryByRole('button')).not.toBeInTheDocument();
   });
 
+  it('shows delayed, partial, and stale freshness states with explicit labels', () => {
+    const delayedDashboard = dashboardWith({
+      generatedAt: '2026-05-26T10:08:00.000Z',
+      source: {
+        name: 'repository-backed live source',
+        freshness: 'delayed',
+        updatedAt: '2026-05-26T10:07:00.000Z',
+        lagMs: 60000,
+      },
+    });
+
+    const partialDashboard = dashboardWith({
+      generatedAt: '2026-05-26T10:08:00.000Z',
+      source: {
+        name: 'repository-backed live source',
+        freshness: 'partial',
+        updatedAt: '2026-05-26T10:07:00.000Z',
+        lagMs: 60000,
+      },
+    });
+
+    const staleDashboard = dashboardWith({
+      generatedAt: '2026-05-26T10:25:00.000Z',
+      source: {
+        name: 'repository-backed live source',
+        freshness: 'stale',
+        updatedAt: '2026-05-26T10:05:00.000Z',
+        lagMs: 1200000,
+      },
+    });
+
+    const { rerender } = render(<DashboardShell state={{ status: 'ready', dashboard: delayedDashboard }} />);
+    expect(screen.getAllByText('Delayed').length).toBeGreaterThan(0);
+    expect(screen.getByText(/Delayed by about 1 minute behind live clock/)).toBeInTheDocument();
+
+    rerender(<DashboardShell state={{ status: 'ready', dashboard: partialDashboard }} />);
+    expect(screen.getAllByText('Partial feed').length).toBeGreaterThan(0);
+    expect(screen.getByText(/Partial feed ·/)).toBeInTheDocument();
+
+    rerender(<DashboardShell state={{ status: 'ready', dashboard: staleDashboard }} />);
+    expect(screen.getAllByText('Stale').length).toBeGreaterThan(0);
+    expect(screen.getByText(/Stale by about 20 minutes behind live clock/)).toBeInTheDocument();
+  });
+
   it('shows an empty state when there are no missions', () => {
     render(<DashboardShell state={{ status: 'ready', dashboard: buildDashboardResponse([]) }} />);
 
-    expect(screen.getByText('No mission history yet')).toBeInTheDocument();
-    expect(screen.getByText('The live replay will attach to the latest mission automatically once the event feed starts sending data.')).toBeInTheDocument();
+    expect(screen.getByText('No mission data yet')).toBeInTheDocument();
+    expect(screen.getByText('Waiting for the first canonical mission to appear.')).toBeInTheDocument();
   });
 });

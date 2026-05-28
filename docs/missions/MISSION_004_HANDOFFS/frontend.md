@@ -25,7 +25,7 @@
 - The frontend should keep the timeline readable as the live source changes
 - The browser title follows the latest mission, so the visible page now says Mission 004
 - Local verification now uses the repo-backed live source file override in the route test, so the frontend view tracks the shipped source
-- Production smoke confirms the timeline renders Mission 004 with delayed freshness
+- Production smoke confirms the timeline renders Mission 004 with delayed freshness, and the live API now reports stale freshness with visible lag
 
 ## Next frontend step
 Keep the one-timeline layout readable and preserve the freshness state so lag remains visible in the UI.

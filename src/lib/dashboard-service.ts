@@ -1,9 +1,9 @@
 import { buildDashboardResponse, buildMissionTimelineResponse, toMillis } from './dashboard-data';
+import { getDashboardStore } from './dashboard-store';
 import { loadDashboardDataSource } from './dashboard-source';
 import type {
   DashboardResponse,
   MissionRecord,
-  MissionTimelineEventRecord,
   MissionTimelineResponse,
 } from './dashboard-types';
 
@@ -43,13 +43,24 @@ function selectLatestMissionRecord(
 }
 
 export async function getDashboardResponse(generatedAt = new Date()): Promise<DashboardResponse> {
+  const hasDatabaseUrl = Boolean(process.env.NEON_DATABASE_URL?.trim() || process.env.DATABASE_URL?.trim());
+
+  if (hasDatabaseUrl) {
+    return getDashboardStore().readDashboard(generatedAt);
+  }
+
   const source = await loadDashboardDataSource();
   return buildDashboardResponse(source.records, generatedAt, source.eventRecords, source.name);
 }
 
 export async function getLatestMissionTimelineResponse(generatedAt = new Date()): Promise<MissionTimelineResponse> {
-  const source = await loadDashboardDataSource();
-  const record = selectLatestMissionRecord(source.records);
+  const hasDatabaseUrl = Boolean(process.env.NEON_DATABASE_URL?.trim() || process.env.DATABASE_URL?.trim());
 
-  return buildMissionTimelineResponse(record, source.eventRecords, generatedAt, source.name);
+  if (hasDatabaseUrl) {
+    return getDashboardStore().readLatestMissionTimeline(generatedAt);
+  }
+
+  const source = await loadDashboardDataSource();
+  const latestMission = selectLatestMissionRecord(source.records);
+  return buildMissionTimelineResponse(latestMission, source.eventRecords, generatedAt, source.name);
 }

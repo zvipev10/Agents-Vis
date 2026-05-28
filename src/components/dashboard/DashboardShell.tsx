@@ -39,8 +39,8 @@ function LoadingState() {
 function EmptyState() {
   return (
     <section className="panel panel-padding empty-state" role="status" aria-label="Empty timeline">
-      <h2 className="panel-title">No mission history yet</h2>
-      <p className="mission-detail">The live replay will attach to the latest mission automatically once the event feed starts sending data.</p>
+      <h2 className="panel-title">No mission data yet</h2>
+      <p className="mission-detail">Waiting for the first canonical mission to appear.</p>
     </section>
   );
 }
@@ -60,9 +60,9 @@ export function DashboardShell({ state }: DashboardShellProps) {
   return (
     <main className="app-shell">
       <section className="hero">
-        <p className="eyebrow">Private visibility application</p>
+        <p className="eyebrow">Read-only mission dashboard</p>
         <h1 className="title">{title}</h1>
-        <p className="lede">A single read-only replay of the latest mission, with chronological ordering, visible parallel work, and explicit freshness cues.</p>
+        <p className="lede">The latest mission stays front and center, with chronology, visible parallel work, updated-at context, and explicit freshness cues kept easy to read.</p>
       </section>
 
       {state.status === 'loading' ? <LoadingState /> : null}

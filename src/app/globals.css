@@ -137,6 +137,11 @@ a {
   background: rgba(165, 61, 47, 0.12);
 }
 
+.badge--delayed {
+  color: #8a5a00;
+  background: rgba(138, 90, 0, 0.12);
+}
+
 .badge--empty,
 .badge--source {
   color: var(--muted);
@@ -440,6 +445,15 @@ a {
   content: '•';
   margin-right: 8px;
   color: #99a3ad;
+}
+
+.mission-meta__label {
+  display: block;
+  color: var(--muted);
+  font-size: 0.76rem;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  font-weight: 700;
 }
 
 .mission-list {

@@ -1,8 +1,8 @@
-%PDF-1.3
+%PDF-1.4
 %“Œ‹ž ReportLab Generated PDF document (opensource)
 1 0 obj
 <<
-/F1 2 0 R /F2 3 0 R
+/F1 2 0 R /F2 3 0 R /F3 4 0 R
 >>
 endobj
 2 0 obj
@@ -12,12 +12,17 @@ endobj
 endobj
 3 0 obj
 <<
-/BaseFont /Symbol /Name /F2 /Subtype /Type1 /Type /Font
+/BaseFont /Courier /Encoding /WinAnsiEncoding /Name /F2 /Subtype /Type1 /Type /Font
 >>
 endobj
 4 0 obj
 <<
-/Contents 8 0 R /MediaBox [ 0 0 612 792 ] /Parent 7 0 R /Resources <<
+/BaseFont /Symbol /Name /F3 /Subtype /Type1 /Type /Font
+>>
+endobj
+5 0 obj
+<<
+/Contents 9 0 R /MediaBox [ 0 0 612 792 ] /Parent 8 0 R /Resources <<
 /Font 1 0 R /ProcSet [ /PDF /Text /ImageB /ImageC /ImageI ]
 >> /Rotate 0 /Trans <<
 
@@ -25,50 +30,59 @@ endobj
   /Type /Page
 >>
 endobj
-5 0 obj
-<<
-/PageMode /UseNone /Pages 7 0 R /Type /Catalog
->>
-endobj
 6 0 obj
 <<
-/Author (anonymous) /CreationDate (D:20260527194840+03'00') /Creator (anonymous) /Keywords () /ModDate (D:20260527194840+03'00') /Producer (ReportLab PDF Library - \(opensource\)) 
-  /Subject (unspecified) /Title (qa) /Trapped /False
+/PageMode /UseNone /Pages 8 0 R /Type /Catalog
 >>
 endobj
 7 0 obj
 <<
-/Count 1 /Kids [ 4 0 R ] /Type /Pages
+/Author (\(anonymous\)) /CreationDate (D:20260527201453+03'00') /Creator (\(unspecified\)) /Keywords () /ModDate (D:20260527201453+03'00') /Producer (ReportLab PDF Library - \(opensource\)) 
+  /Subject (\(unspecified\)) /Title (\(anonymous\)) /Trapped /False
 >>
 endobj
 8 0 obj
 <<
-/Filter [ /ASCII85Decode /FlateDecode ] /Length 1565
+/Count 1 /Kids [ 5 0 R ] /Type /Pages
+>>
+endobj
+9 0 obj
+<<
+/Length 2910
 >>
 stream
-Gat=+bAu>q']%q&mS#NVa0HuUBm5hth/pZ)E>u<d/d-g"M&6@l!0j4mmfbsSUb+!/a"t"qJG4?7\Q;^si6O6-dL+q2#0(jcQtEQO?ol&k_r`"X2fIF5POL[r5+OS9(3<U&f!).3i[oQ?eoE'F17?&Kn)+kA\LNK/@.P*k5G*0T>P].3T2"LrkZdhT.P7#tH.pUj$^XA9#e5SY'jS$aL]pj8&:DMfcIB!"/t\MRr[J*YegYYW)-.<+ImFgO,lK<u-]PkM=s[@I!HPDP(s,9?MSg`BF<K4La4^GI\=cIJ\mf8N(sZYE%Vb70FjIY]RL)Y3)"C1N=@!m<R<0^MY\/^,UVaB]bj^4V.FiILm#5G*9J&!a*>(C]=CDbu&cr$^pqRp.$(oo/=<!OWe6g!(2ZEs4[SkE[fT,,g;O2L<R.kVV9WQPcU!Ki,X(k#lQR(:Nb(3N=ljsnSNrJo=D&_^AF5QH8]Z%k-bD=Qj52+/I(@'gDiqpg@%QcW==Vt.mRtqTVHAP]PO\0Y$WY=?h_jNsG\FbdFH;LKi?fPNj('9Zd#D'nWdte==6[2jZW-S.,>:@+'(09tPVSedsM7L.aLkug!'Woi-(@/F.J,.G$+d*mkrqtdtP\/?qXXRi4(:?+hN5]Q&g>!5Hi-6"$K&B+I$P>"::;W#qr[:lmeT3P6CU&?UX"tg]:.q@X''^ng+i"3kN!$!3YX5&4:?K`n'28lIJdEQn5[I;;_IXDWnN:Z.2BQ*2#a/:n(h668pmEp(4P[t@=:oQ[/4U#?Je<WQ\BI*pcH+'N442`O>9.RUfJuX\,?QYb,11-G2'rYa<L"q88$8U0CZ<LDj66jY6qR%9CS=Y>6qH:($!6hT4*34JOVt5Q2NONOUn@JUM>hS?b2A4d9j`4(T/O'*g#JDs6q^"AUD/n>Dq2PLV+[VuK<I-R"bf]u>IFG0Ls2rJ%iD":VlFl5@g8kN%j18Eh2_AH(M\_#nA$p(S2S+*?Hs$3B>I;b6:p^!QRg:c-W*a%NgRaX/[QI!rXpbj\6Y3\E#'#m4ps$]egI`I't*(Vic_Ep_N)*>'6/.TI29:*06F\\3!'9rKH2=PA(1F9)rfO`\l\%I6QW!b@N]N)P4boq"f25SF<L#:a,UUn3V*\[[F98%H=j?](eq*N)FdC17Z!;ap=/`E3i?`!<P#-8AQRA75INSr]$93mH\2Fo*%Uu%Z[%(;1.b\4[2$XUk\;=eQMY`'PCl[W57UW4*EJ[9X,[P=HQhd%ee\5@f@'PTj_e$OP3OCmI^:'qN*uPKm062G[(R?<aci@[\8BqMll9Tr$9L9qRNIq/#LXB>naTmCf]b'gc5+UcA@V#6pekFi0#okD[h#L)mKQ]rI,LE`N]q=q(P2Eir7&8k=eB;>euThj+m#6Hnkg!_s5.AA$$k%"\2g+JLKV+N]Jm?&qOuq(EWb'&jj%DiD)V,s!?]ZA0Y>_:c)(G(':=dg7k"3c"8<7KB!!\qLgM5*`UcV6Hm'M*Zi'GRck?CM^YZ(MT8@j=eQtQ[^C#-G5g,s\3*LW")pG*@nKl3[1D=[+J?HeZIfVMMAm#~>endstream
+1 0 0 1 0 0 cm  BT /F1 12 Tf 14.4 TL ET
+q
+1 0 0 1 42 362.4 cm
+%PreformattedPara
+0 0 0 rg
+BT 1 0 0 1 36 379.1 Tm /F2 8.5 Tf 10.2 TL (# Mission 004 QA Handoff) Tj T*  T* (## Completed) Tj T* (- Mission 004 is defined as the live-truth ingestion and story-refactor mission) Tj T* (- The app stays read-only, single-view, and consumer-friendly) Tj T* (- The pipeline and the story presentation were both verified) Tj T* (- This run revalidated local quality gates and produced live production smoke evidence) Tj T* (- The repo-backed live source snapshot now includes Mission 004 as the latest mission) Tj T* (- Production smoke shows the deployed app serving Mission 004 from the refreshed canonical live source snapshot) Tj T* (- The refreshed source now includes a new Mission 004 verification event, and the API reports 7 events) Tj T*  T* (## QA focus) Tj T* (- Verify the production URL opens successfully) Tj T* (- Verify the latest mission timeline is still the only visible mission view) Tj T* (- Verify the timeline stays chronological from start to latest event) Tj T* (- Verify parallel actions remain visibly parallel) Tj T* (- Verify freshness / lag / delayed / stale states are clearly indicated) Tj T* (- Verify the displayed content reflects the updated truth coming from the ingestion path) Tj T* (- Verify the story reads more clearly after the writing-contract change) Tj T* (- Verify the interface remains read-only) Tj T* (- Verify production smoke checks run against the deployed app, not just local) Tj T* (- Document each QA step in a PDF artifact stored in the repo) Tj T* (- This run confirms the deployed app is now on Mission 004, and freshness is visibly delayed; the QA PDF artifact lives in `docs/missions/pdfs/`) Tj T*  T* (## Exit criteria) Tj T* (- The ingestion path is working in production) Tj T* (- The story-writing contract is visible in the rendered output) Tj T* (- The app passes smoke verification on the live deployment) Tj T*  T* (## Smoke evidence) Tj T* (- Production URL opens successfully with HTTP 200) Tj T* (- Production API returns the Mission 004 payload) Tj T* (- Live API smoke from this run:) Tj T* (  - `GET https://agents-vis.vercel.app/api/missions/latest` ) Tj /F3 8.5 Tf 10.2 TL (\256) Tj /F2 8.5 Tf 10.2 TL ( 200, Mission 004 payload, `eventCount: 7`, `freshnessState: stale`, `lagMs: 2164553`) Tj T* (  - `GET https://agents-vis.vercel.app/api/dashboard` ) Tj /F3 8.5 Tf 10.2 TL (\256) Tj /F2 8.5 Tf 10.2 TL ( 200, stale freshness reported with visible lag, `lagMs: 2171520`) Tj T* (- The deployed app still serves the single latest-mission timeline through the live source path) Tj T* (- Local verification in this run pinned the route test to the repo-backed live source file and passed with the refreshed Mission 004 payload) Tj T* (- Markdown handoff updated and the matching PDF artifact was regenerated in `docs/missions/pdfs/`) Tj T* ET
+Q
+ 
+endstream
 endobj
 xref
-0 9
+0 10
 0000000000 65535 f 
 0000000061 00000 n 
-0000000102 00000 n 
-0000000209 00000 n 
-0000000286 00000 n 
-0000000479 00000 n 
-0000000547 00000 n 
-0000000802 00000 n 
-0000000861 00000 n 
+0000000112 00000 n 
+0000000219 00000 n 
+0000000324 00000 n 
+0000000401 00000 n 
+0000000594 00000 n 
+0000000662 00000 n 
+0000000942 00000 n 
+0000001001 00000 n 
 trailer
 <<
 /ID 
-[<2313170231b6ae919fc5f8d88fdb0c4d><2313170231b6ae919fc5f8d88fdb0c4d>]
+[<0eb02bd87500ec6377344a0872b551cc><0eb02bd87500ec6377344a0872b551cc>]
 % ReportLab generated PDF document -- digest (opensource)
 
-/Info 6 0 R
-/Root 5 0 R
-/Size 9
+/Info 7 0 R
+/Root 6 0 R
+/Size 10
 >>
 startxref
-2517
+3962
 %%EOF

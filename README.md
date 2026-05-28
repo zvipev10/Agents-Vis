@@ -37,6 +37,8 @@ That preview has its own URL and is used for QA and review before merging to pro
 - Preview deployments use Vercel-managed preview branches in Neon
 - The team leader does not need to manually create a Neon branch for every PR
 - Vercel manages the deployment environment variables for the connected project
+- The canonical runtime database URL is exposed as `DATABASE_URL` or `NEON_DATABASE_URL`
+- Agent writes use a simple server-validated POST path to the canonical DB
 - Migrations should be validated in preview before production promotion
 - A separate long-lived staging database is optional, not required by default
 

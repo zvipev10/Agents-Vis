@@ -1,8 +1,8 @@
-%PDF-1.3
+%PDF-1.4
 %“Œ‹ž ReportLab Generated PDF document (opensource)
 1 0 obj
 <<
-/F1 2 0 R /F2 3 0 R
+/F1 2 0 R /F2 3 0 R /F3 4 0 R
 >>
 endobj
 2 0 obj
@@ -12,12 +12,17 @@ endobj
 endobj
 3 0 obj
 <<
-/BaseFont /Symbol /Name /F2 /Subtype /Type1 /Type /Font
+/BaseFont /Courier /Encoding /WinAnsiEncoding /Name /F2 /Subtype /Type1 /Type /Font
 >>
 endobj
 4 0 obj
 <<
-/Contents 8 0 R /MediaBox [ 0 0 612 792 ] /Parent 7 0 R /Resources <<
+/BaseFont /Symbol /Name /F3 /Subtype /Type1 /Type /Font
+>>
+endobj
+5 0 obj
+<<
+/Contents 9 0 R /MediaBox [ 0 0 612 792 ] /Parent 8 0 R /Resources <<
 /Font 1 0 R /ProcSet [ /PDF /Text /ImageB /ImageC /ImageI ]
 >> /Rotate 0 /Trans <<
 
@@ -25,50 +30,59 @@ endobj
   /Type /Page
 >>
 endobj
-5 0 obj
-<<
-/PageMode /UseNone /Pages 7 0 R /Type /Catalog
->>
-endobj
 6 0 obj
 <<
-/Author (anonymous) /CreationDate (D:20260527194840+03'00') /Creator (anonymous) /Keywords () /ModDate (D:20260527194840+03'00') /Producer (ReportLab PDF Library - \(opensource\)) 
-  /Subject (unspecified) /Title (coordinator) /Trapped /False
+/PageMode /UseNone /Pages 8 0 R /Type /Catalog
 >>
 endobj
 7 0 obj
 <<
-/Count 1 /Kids [ 4 0 R ] /Type /Pages
+/Author (\(anonymous\)) /CreationDate (D:20260527201453+03'00') /Creator (\(unspecified\)) /Keywords () /ModDate (D:20260527201453+03'00') /Producer (ReportLab PDF Library - \(opensource\)) 
+  /Subject (\(unspecified\)) /Title (\(anonymous\)) /Trapped /False
 >>
 endobj
 8 0 obj
 <<
-/Filter [ /ASCII85Decode /FlateDecode ] /Length 2051
+/Count 1 /Kids [ 5 0 R ] /Type /Pages
+>>
+endobj
+9 0 obj
+<<
+/Length 3573
 >>
 stream
-Gatm<>ArLj'RoMS(hm@*.KhG[>bjRE6?ZGT?Gj3)Q,6oNLY7W!XI1dorUi<pYq^p*X].^r@!g2l46QKK8-\iJFT8\1OII-Ph[dg_+gZb/e$G:_*lrHs;fdBFXs_u)_dHlBP4R')R?cjo%JdfHAl=`,+=4KpWgjB1Ua#9+aCS6H9P32(m$@eiP)6Scptd^tf&)SD=t(#;Pei>;e3MgQ+E7Xu5qu*X&dW,#kS[Bi-"5dN['B?[7^OSo`W51H\T)[+oe<or3"If%fu/ObKNs^7Q5'W,=04]]AZ[^1CT<5C6@iH0:?XKFGY#?b'NC6s)+I&OJ2LJ\@KjrR$P-:*qC/CC4IgKM#FX23$*f0U0H9JRnQQ"SV_2P-?/l#,Lg_T;k4mU`cA>lMFf6,-=`<Wo6?JLrk]f'#f@1Ina.LJ2Bsur=UmU1!MLe?f1`6!t8W?FqQQk;_aiHE<f-7MpfaIS-:gf0+r9WnsS@u1?"I?#`;Af/rbI'!,ec@_\TooJ`A"4D@RSX1O-0+cH`6D[&grs#53)C(F=]0-iKHCqA))G?iY&Z'W[`P5NijC*N5-$qoYb!&o%/F4>H`.DG0>M*u$NVhmKmbf*36%;!-]YTD%P/JEXD$0:=;-S#\>VF5$JgfOm7+O[Lbc'WH7><oKGjZ4K<M)H`dlLOErJHhS."4g=e[,A57AUKN,3oC<#eKiI'?Pp9(j%/IJM1T2:ZXjb!a88*8P]Q"?cn_\C^6l<a:Lk>R7YtTZ",.'>0Xr`>0/cO@*WL)WnaQ@MmL91^hF9>kdMu]+*cYU`NJ%\qiR2C:aDpm[S)"fo$+'ZN:]J[4m$qR+YHsDYiKIC5._OW/a[P3(_gnfN`4H]G9NZ^t>M71IScXG.PsSd(6/9htXT7(KK_4cVOLdCS;2Imc.u!\:E`3@"s<c_)Oe!8nUco8;i)!1;oPI`T>)lkc,gFe7oLAR#N&oEc8-n<6/`4l(s/n@($'+Y/a=C`/-33:Nr,!JeGU>hO/K6FQT>D74hd0(rl^TnH,^NO,-`j<9*\l9lYXbW'"/a-YQ<#c-gh/I;'``J9G.0m3p;a3N<cWF<m.!`P1Y52gt/]g`]XV+!o\fTL>`)YG#F&m'=fG<njN(/Rn-:D/($n"Nuo-NX1rX,?Qu`JYg?H>_GW6%[-e/C.)F4TUCcRB`XP##`RS1Jdgk$g%)QcHkWnN\nq4c-QQpJ*6XB#7c`SfYKN*/%CQ\rE>.M0h*5E(lr:>ce`hM>&O$l=>ujkBZQ2aeqq8R>X<b^?29\PuC`NPF/P-7J?la2li+hDa,`[_3dC@kLhiM"8N*At,]dhRWdLW:<76k8t%"S#MbV:^eV=!8@JE+/[.ZGPr[G\Ja(@4)G'mQ!U*.3h2Ki'@7*Z`R/(04.lRMm><Cq<'`"tD8;/2@K#Ab3:l0hH+'*r":/TW,&@n?YL\dP2[$>@+ei*GJ`uQrr-iX+$oujtOKHAFWiE=mKFt]ue^fS-=")(-.VBcZf,n1^kn)B'H7.$u1e5lb94dBK/Qp6$>0`<F4m<S5U'(:_)@j.Ki9A_%%e-fZpA]5TH[n.jFChjgdjSB%dA&^2PU<Y9qSch6.!%X6HE#eTNb:I%bMe>U$qV^67IjlbtHbg7`$0aVk9hD:ZB%*#rLQA2)YbcZ%X=U)P_!mPJ%-6G)$!OB1E#"Ml8B^SfVXeHHJe.dH#n/.oH)A<!g;@LtKdr;,gQj6Z=#p\0_EGLqoEDE_?U]mG)'o^1u3o]cAR_t7$4Z9DoZISTQV+fWV2>Jc5O1CUhpcG"'Cjr"&??(l`uT^dG4;G2`bbPs$/iPgBAlVbIL:$AG#<W$f4(52>$r9\SqQGuo#Wo'`#3-2Zd[!m`UbCH3.;#7P.rLfBth^dkMEQ7nMaj*Ze-\!K'8[u,(UV_im8f%[4-R](fQG&PC9NU<1l9Yl:Gk=;b3&5fe3ogX!bphX551ROnB)Y0?D2\GGA4*.53jj<.R3U38Ct6ml_JeeN4Ua+dZ^uA'*(`;-T^mZ6QX$[^_i.e,%eK":BSFOQ^@f6S@%BR1Y`ZCVp[Cd$5Q)%H8r>P~>endstream
+1 0 0 1 0 0 cm  BT /F1 12 Tf 14.4 TL ET
+q
+1 0 0 1 42 311.4 cm
+%PreformattedPara
+0 0 0 rg
+BT 1 0 0 1 36 430.1 Tm /F2 8.5 Tf 10.2 TL (# Mission 004 Coordinator Handoff) Tj T*  T* (## Current mission state) Tj T* (Mission 004 is the live-truth ingestion and storytelling mission.) Tj T* (The mission is now complete: the live source was refreshed again in the repo with a new verification event, production is ingesting the refreshed feed, and the single timeline still shows the latest mission with freshness lag visible.) Tj T*  T* (## What is done) Tj T* (- Mission packet is defined) Tj T* (- Backend, frontend, QA, and coordinator responsibilities are declared) Tj T* (- The release goal is explicit: updated truth plus clearer story, not just a frozen production snapshot) Tj T* (- The writing contract is defined: updates should say what changed, who changed it, why it matters, and what comes next when relevant) Tj T* (- The repo-backed live source snapshot now includes Mission 004 as the latest mission) Tj T* (- Backend and frontend implementation work is reflected in the live source refresh and the follow-up verification event) Tj T* (- Repo checks are green: tests, typecheck, and build pass) Tj T* (- This run revalidated the local repo successfully with `npm test`, `npm run typecheck`, and `npm run build`) Tj T* (- This run rechecked production and confirmed the deployed app serves Mission 004 data from the refreshed canonical live source) Tj T*  T* (## What remains) Tj T* (- No functional blocker remains for Mission 004) Tj T* (- Keep the freshness state visible and keep the live source refreshed as new truth arrives) Tj T* (- Keep the production deployment path and external live-source wiring documented for future runs) Tj T*  T* (## Coordinator instructions) Tj T* (- Keep the user-facing experience to one live timeline only) Tj T* (- Do not add a second summary view) Tj T* (- Preserve explicit freshness / lag indicators) Tj T* (- Keep the checkpoint updated after each meaningful milestone) Tj T* (- Use the checkpoint and handoffs as the source of truth for future resumption) Tj T* (- Treat Mission 004 as complete unless new scope is introduced) Tj T* (- Send a short update after every meaningful step, not only at the end of a run) Tj T* (- Each update should say who worked and what the next step is) Tj T* (- Every product, backend, frontend, and QA step must be documented in a PDF artifact in the repo at `docs/missions/pdfs/`) Tj T*  T* (## Live runtime note) Tj T* (- Dev server may still be used for local verification) Tj T* (- Production verification must happen on the deployed app) Tj T* (- Production is reachable and returns 200, and the live payload now reflects Mission 004 from the refreshed canonical live source) Tj T* (- Local verification now pins the route test to `AGENTS_VIS_DASHBOARD_SOURCE_FILE=src/lib/dashboard-live-source.json` so the checkout matches the shipped source) Tj T* (- Production smoke this run:) Tj T* (  - `GET https://agents-vis.vercel.app/api/missions/latest` ) Tj /F3 8.5 Tf 10.2 TL (\256) Tj /F2 8.5 Tf 10.2 TL ( 200, Mission 004 payload, `eventCount: 7`, `freshnessState: stale`, `lagMs: 2164553`) Tj T* (  - `GET https://agents-vis.vercel.app/api/dashboard` ) Tj /F3 8.5 Tf 10.2 TL (\256) Tj /F2 8.5 Tf 10.2 TL ( 200, JSON source freshness stale, `lagMs: 2171520`) Tj T* (- The deployed app still serves the single latest-mission timeline through the live source path) Tj T* (- Markdown handoff updated and the matching PDF artifact was regenerated in `docs/missions/pdfs/`) Tj T* ET
+Q
+ 
+endstream
 endobj
 xref
-0 9
+0 10
 0000000000 65535 f 
 0000000061 00000 n 
-0000000102 00000 n 
-0000000209 00000 n 
-0000000286 00000 n 
-0000000479 00000 n 
-0000000547 00000 n 
-0000000811 00000 n 
-0000000870 00000 n 
+0000000112 00000 n 
+0000000219 00000 n 
+0000000324 00000 n 
+0000000401 00000 n 
+0000000594 00000 n 
+0000000662 00000 n 
+0000000942 00000 n 
+0000001001 00000 n 
 trailer
 <<
 /ID 
-[<e78a2c91c30a1f9aaab84c276c7fa363><e78a2c91c30a1f9aaab84c276c7fa363>]
+[<7bb8ca1708ea309226a7173bef38e858><7bb8ca1708ea309226a7173bef38e858>]
 % ReportLab generated PDF document -- digest (opensource)
 
-/Info 6 0 R
-/Root 5 0 R
-/Size 9
+/Info 7 0 R
+/Root 6 0 R
+/Size 10
 >>
 startxref
-3012
+4625
 %%EOF

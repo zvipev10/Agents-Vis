@@ -12,7 +12,7 @@ export function MissionList({ missions }: MissionListProps) {
     return (
       <div className="panel panel-padding empty-state" role="status" aria-label="No additional missions">
         <h3 className="panel-title">Recent missions</h3>
-        <p className="mission-detail">No additional missions yet. The latest mission is the only one available right now.</p>
+        <p className="mission-detail">No additional missions yet. The latest mission stays as the primary narrative.</p>
       </div>
     );
   }
