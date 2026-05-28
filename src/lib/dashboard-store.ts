@@ -288,12 +288,77 @@ class MemoryDashboardStore implements DashboardStore {
 
 class NeonDashboardStore implements DashboardStore {
   private readonly pool: Pool;
+  private schemaReady: Promise<void> | null = null;
 
   constructor(databaseUrl: string) {
     this.pool = new Pool({ connectionString: databaseUrl });
   }
 
+  private async ensureSchema(): Promise<void> {
+    if (!this.schemaReady) {
+      this.schemaReady = (async () => {
+        await this.pool.query(`
+          create table if not exists missions (
+            id text primary key,
+            title text not null,
+            status text not null check (status in ('running', 'completed', 'unknown')),
+            updated_at timestamptz not null,
+            actor_name text,
+            actor_role text,
+            action text,
+            detail text,
+            summary text,
+            version bigint not null default 0,
+            created_at timestamptz not null default now(),
+            ingested_at timestamptz not null default now()
+          )
+        `);
+        await this.pool.query(`
+          create index if not exists missions_updated_at_idx on missions (updated_at desc, title asc, id asc)
+        `);
+        await this.pool.query(`
+          create index if not exists missions_status_idx on missions (status)
+        `);
+        await this.pool.query(`
+          create table if not exists mission_events (
+            id text primary key,
+            mission_id text not null references missions (id) on delete cascade,
+            actor_name text not null,
+            actor_role text,
+            action text not null,
+            detail text,
+            summary text,
+            event_timestamp timestamptz not null,
+            sequence_index bigint not null,
+            parallel_group_id text,
+            parallel_order integer,
+            parallel_size integer,
+            source_label text,
+            event_type text,
+            request_id text not null unique,
+            payload_hash text not null,
+            freshness text not null default 'fresh' check (freshness in ('fresh', 'partial', 'delayed', 'stale', 'empty')),
+            created_at timestamptz not null default now(),
+            unique (mission_id, sequence_index)
+          )
+        `);
+        await this.pool.query(`
+          create index if not exists mission_events_mission_time_idx on mission_events (mission_id, event_timestamp asc, sequence_index asc)
+        `);
+        await this.pool.query(`
+          create index if not exists mission_events_created_at_idx on mission_events (mission_id, created_at desc)
+        `);
+        await this.pool.query(`
+          create unique index if not exists mission_events_request_id_idx on mission_events (request_id)
+        `);
+      })();
+    }
+
+    await this.schemaReady;
+  }
+
   private async fetchMissions(): Promise<MissionVersionedRecord[]> {
+    await this.ensureSchema();
     const { rows } = await this.pool.query<NeonMissionRow>(
       `
         select id, title, status, updated_at, actor_name, actor_role, action, detail, summary, version
@@ -306,6 +371,7 @@ class NeonDashboardStore implements DashboardStore {
   }
 
   private async fetchLatestMission(): Promise<MissionVersionedRecord | null> {
+    await this.ensureSchema();
     const { rows } = await this.pool.query<NeonMissionRow>(
       `
         select id, title, status, updated_at, actor_name, actor_role, action, detail, summary, version
@@ -319,6 +385,7 @@ class NeonDashboardStore implements DashboardStore {
   }
 
   private async fetchEventsForMission(missionId: string): Promise<MissionTimelineEventRecord[]> {
+    await this.ensureSchema();
     const { rows } = await this.pool.query<NeonEventRow>(
       `
         select id, mission_id, actor_name, actor_role, action, event_timestamp, sequence_index,
@@ -334,6 +401,7 @@ class NeonDashboardStore implements DashboardStore {
   }
 
   async readDashboard(generatedAt = new Date()): Promise<DashboardResponse> {
+    await this.ensureSchema();
     const missions = await this.fetchMissions();
     const latestMission = missions[0] ?? null;
     const events = latestMission ? await this.fetchEventsForMission(latestMission.id) : [];
@@ -341,12 +409,14 @@ class NeonDashboardStore implements DashboardStore {
   }
 
   async readLatestMissionTimeline(generatedAt = new Date()): Promise<MissionTimelineResponse> {
+    await this.ensureSchema();
     const latestMission = await this.fetchLatestMission();
     const events = latestMission ? await this.fetchEventsForMission(latestMission.id) : [];
     return buildMissionTimelineResponse(latestMission, events, generatedAt, DEFAULT_SOURCE_NAME);
   }
 
   async appendAgentEvent(input: AgentEventWriteInput): Promise<AgentEventWriteResult> {
+    await this.ensureSchema();
     const client = await this.pool.connect();
     try {
       await client.query('begin');
