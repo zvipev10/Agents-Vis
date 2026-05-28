@@ -1,9 +1,9 @@
 # Mission 005 Coordinator Handoff
 
 ## Verdict
-**acceptable with caveats**
+**blocked on live runtime/database wiring**
 
-The repo now has the core Neon-backed architecture in place: a simple agent write endpoint, a Neon-backed store for reads/writes, preserved dashboard/latest-mission envelopes, and visible freshness/lag semantics. Backend, Frontend, Product, and QA handoffs have been refreshed, and the mission documentation PDFs now exist. The latest verification run confirmed local build/test/typecheck success and showed that production still serves Mission 004 / JSON-backed content from this environment, so the deployment/cutover gap remains open.
+The repo now has the core Neon-backed architecture in place: a simple agent write endpoint, a Neon-backed store for reads/writes, preserved dashboard/latest-mission envelopes, and visible freshness/lag semantics. Backend, Frontend, Product, and QA handoffs have been refreshed, and the mission documentation PDFs now exist. The latest verification run confirmed local build/test/typecheck success, but the deployed Vercel app is currently returning `500` on `/`, `/api/dashboard`, and `/api/missions/latest`, so live cutover verification remains blocked.
 
 ## What is done
 - Canonical trust boundary is implemented in code: backend validation + Neon DB are the source of truth.
@@ -23,8 +23,8 @@ The repo now has the core Neon-backed architecture in place: a simple agent writ
    - There is a schema migration, but no clearly executed one-time JSON-to-Neon backfill path has been verified from this environment.
    - The boundary must be explicit: JSON may seed/bootstrap once, but new writes must go only to the simple backend API and Neon.
 
-3. **Live deployment still shows Mission 004 from this environment.**
-   - The production URL is reachable, but it is not yet serving the Mission 005 cutover from the checkout in hand.
+3. **Live deployment currently returns 500 from this environment.**
+   - The production URL is reachable, but `/`, `/api/dashboard`, and `/api/missions/latest` are returning `500`.
    - This is a deployment / environment wiring issue, not a local code-quality issue.
 
 4. **Freshness is mostly correct at the API layer, but DB persistence still stores a freshness field on events.**
@@ -49,7 +49,7 @@ The repo now has the core Neon-backed architecture in place: a simple agent writ
 
 ## Recommended next-step dependencies
 ### Backend
-- Finish any remaining deployment wiring checks for Neon-backed runtime in canonical environments.
+- Finish the live deployment/runtime wiring checks for Neon-backed canonical environments.
 - Confirm the live write path accepts valid payloads without any secret, nonce, or replay envelope.
 - Keep the write/read contract stable.
 
@@ -67,4 +67,4 @@ The repo now has the core Neon-backed architecture in place: a simple agent writ
 - Re-run deployed smoke once the environment wiring is updated.
 
 ## Coordinator call
-Proceed with deployment/cutover verification next. Do not mark Mission 005 complete until the deployed app in the canonical environment is confirmed to be reading the Neon-backed path rather than the JSON fallback.
+Proceed with deployment/runtime verification next. Do not mark Mission 005 complete until the deployed app in the canonical environment is confirmed to return 200s on the canonical DB-backed path.

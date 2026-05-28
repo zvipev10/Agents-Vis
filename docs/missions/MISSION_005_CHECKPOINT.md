@@ -21,13 +21,14 @@ The local repo passes typecheck, test, and build.
   - `/` rendered successfully
   - the UI remained read-only
   - freshness / lag / updated-at remained visible
-- Production smoke reachability check ✅, but the deployed app is still on Mission 004 from this environment
-  - `https://agents-vis.vercel.app/api/missions/latest` returned `mission-004`
-  - `https://agents-vis.vercel.app/api/dashboard` still identifies the source as `canonical production live source`
+- Production smoke reachability check is currently blocked by a runtime 500 in this environment
+  - `https://agents-vis.vercel.app/` returned `500`
+  - `https://agents-vis.vercel.app/api/missions/latest` returned `500`
+  - `https://agents-vis.vercel.app/api/dashboard` returned `500`
 
 ## What remains
-- Deploy the simplified v1 checkout to Vercel so production/preview reflect the canonical DB path.
-- Re-run deployed smoke after deployment to confirm the live app reflects Mission 005 rather than Mission 004.
+- Fix the live Vercel runtime/database wiring so the deployed app serves the canonical DB-backed path instead of returning 500.
+- Re-run deployed smoke after the live fix to confirm the app reflects Mission 005 in production/preview.
 - Confirm the live deployment no longer depends on JSON as the truth path in canonical environments.
 - If needed, complete the one-time operational backfill/cutover outside the repo.
 
