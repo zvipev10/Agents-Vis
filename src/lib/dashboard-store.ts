@@ -421,11 +421,36 @@ class NeonDashboardStore implements DashboardStore {
     try {
       await client.query('begin');
 
-      const { rows: sequenceRows } = await client.query<{ id: string }>(
-        `select id from mission_events where mission_id = $1 and sequence_index = $2 limit 1`,
+      const { rows: sequenceRows } = await client.query<{ id: string; payload_hash: string; request_id: string }>(
+        `select id, payload_hash, request_id from mission_events where mission_id = $1 and sequence_index = $2 limit 1`,
         [input.missionId, input.sequenceIndex],
       );
       if (sequenceRows[0]) {
+        if (sequenceRows[0].payload_hash === input.payloadHash) {
+          const { rows: missionRows } = await client.query<NeonMissionRow>(
+            `select id, title, status, updated_at, actor_name, actor_role, action, detail, summary, version from missions where id = $1 limit 1`,
+            [input.missionId],
+          );
+          await client.query('rollback');
+          client.release();
+
+          if (!missionRows[0]) throw new Error('Mission not found for replay');
+
+          return {
+            ok: true,
+            replayed: true,
+            requestId: sequenceRows[0].request_id,
+            mission: toMissionRecord(missionRows[0]),
+            event: {
+              id: sequenceRows[0].id,
+              sequenceIndex: input.sequenceIndex,
+            },
+            source: {
+              name: DEFAULT_SOURCE_NAME,
+              updatedAt: missionRows[0].updated_at,
+            },
+          };
+        }
         throw new Error('Sequence collision');
       }
 
