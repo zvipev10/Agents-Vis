@@ -165,6 +165,32 @@ The team reports back with:
 
 The coordinator worker does not stop at identifying gaps; the coordinator worker is responsible for planning and closing missing pieces needed for overall mission success.
 
+## Mission event ledger protocol
+
+For any mission that uses the Agents-Vis live dashboard, the event API is the mission ledger. Agents must treat it as the only supported write path for timeline state.
+
+Required rules:
+- Write mission timeline events only through `POST /api/agent-events`.
+- Do not write dashboard JSON, Neon rows, mission timeline state, or cached API payloads directly.
+- The coordinator worker owns the `missionId`, role assignments, and sequence plan before workers start writing events.
+- All workers must use the same `missionId` for the mission.
+- `sequenceIndex` must be a safe integer and strictly increasing for durable mission milestones.
+- Use adjacent indexes for normal serial work. Do not use large artificial gaps such as `99`, `1000`, or random fallback numbers unless the coordinator explicitly reserved that range before work began.
+- Parallel work should still receive deterministic adjacent indexes from the coordinator, with `parallelGroupId`, `parallelOrder`, and `parallelSize` used to express concurrency.
+- Write events only for durable milestones: assignment accepted, important decision, handoff completed, verification result, blocker found, deployment/promote decision, and final closeout.
+- Do not write heartbeat, progress-noise, speculative, or duplicate summary events.
+- If the API returns a sequence conflict, stop and ask the coordinator for a new assigned `sequenceIndex`. Do not retry with a random or very large index.
+- If the API returns a server error, record the failure in the checkpoint and stop event-writing work until the coordinator resolves the write path.
+
+Recommended event ownership:
+- Coordinator writes mission start, sequence plan, integration gates, blocker decisions, and final closeout.
+- Product writes product decisions and acceptance-criteria handoff events.
+- Backend writes API/data-contract decisions, backend implementation milestones, and backend verification events.
+- Frontend writes UI implementation and frontend verification events.
+- QA writes validation plan, validation results, regressions, and release-readiness events.
+
+A mission is not considered fully observable until the coordinator confirms that expected role events were accepted by `POST /api/agent-events` and visible through both `/api/dashboard` and `/api/missions/latest`.
+
 ## Default decision rules
 
 When a request is underspecified, use these defaults:
