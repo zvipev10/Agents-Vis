@@ -492,6 +492,21 @@ class NeonDashboardStore implements DashboardStore {
             unique (mission_id, sequence_index)
           )
         `);
+        await this.pool.query(`alter table mission_events add column if not exists task_id text not null default 'unknown'`);
+        await this.pool.query(`alter table mission_events add column if not exists event_status text`);
+        await this.pool.query(`alter table mission_events add column if not exists action text`);
+        await this.pool.query(`alter table mission_events add column if not exists detail text`);
+        await this.pool.query(`alter table mission_events add column if not exists summary text`);
+        await this.pool.query(`alter table mission_events alter column task_id set default 'unknown'`);
+        await this.pool.query(`alter table mission_events alter column task_id set not null`);
+        await this.pool.query(`alter table mission_events alter column action set not null`);
+        await this.pool.query(`alter table mission_events alter column request_id set not null`);
+        await this.pool.query(`alter table mission_events alter column payload_hash set not null`);
+        await this.pool.query(`alter table mission_events alter column freshness set default 'fresh'`);
+        await this.pool.query(`update mission_events set task_id = 'unknown' where task_id is null`);
+        await this.pool.query(`update mission_events set action = coalesce(action, 'updated the mission') where action is null`);
+        await this.pool.query(`update mission_events set summary = coalesce(summary, action, 'Updated mission state') where summary is null`);
+        await this.pool.query(`update mission_events set detail = coalesce(detail, summary, action, 'No additional details were recorded.') where detail is null`);
         await this.pool.query(`
           create index if not exists mission_events_mission_time_idx on mission_events (mission_id, event_timestamp asc, sequence_index asc)
         `);
