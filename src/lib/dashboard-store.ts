@@ -110,37 +110,29 @@ function getDatabaseUrl(): string | null {
   return process.env[NEON_DATABASE_URL_ENV]?.trim() || process.env[DATABASE_URL_ENV]?.trim() || null;
 }
 
-export function normalizeDatabaseTimestamp(value: unknown, fieldName: string): string {
+export function normalizeDatabaseTimestamp(value: unknown): string {
   if (value instanceof Date) {
     const millis = value.getTime();
-    if (Number.isFinite(millis)) {
-      return value.toISOString();
-    }
+    return Number.isFinite(millis) ? value.toISOString() : '';
   }
 
   if (typeof value === 'string') {
     const trimmed = value.trim();
     const millis = Date.parse(trimmed);
-    if (trimmed.length > 0 && Number.isFinite(millis)) {
-      return new Date(millis).toISOString();
-    }
+    return trimmed.length > 0 && Number.isFinite(millis) ? new Date(millis).toISOString() : '';
   }
 
-  throw new Error(`Invalid ${fieldName} timestamp from database`);
+  return '';
 }
 
-export function normalizeDatabaseInteger(value: unknown, fieldName: string): number | null {
+export function normalizeDatabaseInteger(value: unknown): number | null {
   if (value === null || value === undefined) {
     return null;
   }
 
   const numeric = typeof value === 'bigint' ? Number(value) : typeof value === 'string' ? Number(value) : value;
 
-  if (typeof numeric === 'number' && Number.isSafeInteger(numeric)) {
-    return numeric;
-  }
-
-  throw new Error(`Invalid ${fieldName} integer from database`);
+  return typeof numeric === 'number' && Number.isSafeInteger(numeric) ? numeric : null;
 }
 
 function toMissionRecord(row: NeonMissionRow): MissionVersionedRecord {
@@ -148,13 +140,13 @@ function toMissionRecord(row: NeonMissionRow): MissionVersionedRecord {
     id: row.id,
     title: row.title,
     status: row.status,
-    updatedAt: normalizeDatabaseTimestamp(row.updated_at, 'missions.updated_at'),
+    updatedAt: normalizeDatabaseTimestamp(row.updated_at),
     actorName: row.actor_name,
     actorRole: row.actor_role,
     action: row.action,
     detail: row.detail,
     summary: row.summary,
-    version: normalizeDatabaseInteger(row.version, 'missions.version') ?? 0,
+    version: normalizeDatabaseInteger(row.version) ?? 0,
   };
 }
 
@@ -165,11 +157,11 @@ function toEventRecord(row: NeonEventRow): MissionTimelineEventRecord {
     actorName: row.actor_name,
     actorRole: row.actor_role,
     action: row.action,
-    timestamp: normalizeDatabaseTimestamp(row.event_timestamp, 'mission_events.event_timestamp'),
-    sequenceIndex: normalizeDatabaseInteger(row.sequence_index, 'mission_events.sequence_index') ?? 0,
+    timestamp: normalizeDatabaseTimestamp(row.event_timestamp),
+    sequenceIndex: normalizeDatabaseInteger(row.sequence_index) ?? 0,
     parallelGroupId: row.parallel_group_id,
-    parallelOrder: normalizeDatabaseInteger(row.parallel_order, 'mission_events.parallel_order'),
-    parallelSize: normalizeDatabaseInteger(row.parallel_size, 'mission_events.parallel_size'),
+    parallelOrder: normalizeDatabaseInteger(row.parallel_order),
+    parallelSize: normalizeDatabaseInteger(row.parallel_size),
     sourceLabel: row.source_label,
     freshness: row.freshness as MissionTimelineEventRecord['freshness'],
   };
