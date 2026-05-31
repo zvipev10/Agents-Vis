@@ -22,6 +22,8 @@ export interface AgentEventWriteInput {
   summary?: string | null;
   eventTimestamp: string;
   sequenceIndex: number;
+  taskId: string;
+  eventStatus?: 'started' | 'updated' | 'blocked' | 'resumed' | 'completed' | null;
   parallelGroupId?: string | null;
   parallelOrder?: number | null;
   parallelSize?: number | null;
@@ -54,6 +56,7 @@ export interface AgentEventWriteResult {
 export interface DashboardStore {
   readDashboard(generatedAt?: Date): Promise<DashboardResponse>;
   readLatestMissionTimeline(generatedAt?: Date): Promise<MissionTimelineResponse>;
+  readAgentEvents(filters: { role?: string; eventStatus?: string; search?: string }): Promise<MissionTimelineEventRecord[]>;
   appendAgentEvent(input: AgentEventWriteInput): Promise<AgentEventWriteResult>;
 }
 
@@ -86,9 +89,13 @@ interface NeonMissionRow {
 interface NeonEventRow {
   id: string;
   mission_id: string;
+  task_id: string;
+  event_status: string | null;
   actor_name: string;
   actor_role: string | null;
   action: string;
+  detail: string | null;
+  summary: string | null;
   event_timestamp: unknown;
   sequence_index: unknown;
   parallel_group_id: string | null;
@@ -103,11 +110,51 @@ const DEFAULT_SOURCE_NAME = 'neon-canonical-db';
 const DATABASE_URL_ENV = 'DATABASE_URL';
 const NEON_DATABASE_URL_ENV = 'NEON_DATABASE_URL';
 
+export class DashboardStoreHttpError extends Error {
+  constructor(public readonly statusCode: number, message: string) {
+    super(message);
+    this.name = 'DashboardStoreHttpError';
+  }
+}
+
+const ROLE_FILTER_ALIASES: Record<string, string> = {
+  architect: 'Architect',
+  product: 'Product',
+  backend: 'Backend Developer',
+  'backend developer': 'Backend Developer',
+  frontend: 'Frontend Developer',
+  'frontend developer': 'Frontend Developer',
+  qa: 'QA',
+  coordinator: 'Coordinator',
+};
+
 let testDashboardStore: DashboardStore | null = null;
 let defaultDashboardStore: DashboardStore | null = null;
 
 function getDatabaseUrl(): string | null {
   return process.env[NEON_DATABASE_URL_ENV]?.trim() || process.env[DATABASE_URL_ENV]?.trim() || null;
+}
+
+function normalizeRoleFilter(value: string | undefined): string | undefined {
+  if (!value) {
+    return undefined;
+  }
+
+  const trimmed = value.trim();
+  if (!trimmed) {
+    return undefined;
+  }
+
+  return ROLE_FILTER_ALIASES[trimmed.toLowerCase()] ?? trimmed;
+}
+
+function normalizeSearchFilter(value: string | undefined): string | undefined {
+  if (!value) {
+    return undefined;
+  }
+
+  const trimmed = value.trim();
+  return trimmed.length > 0 ? trimmed : undefined;
 }
 
 export function normalizeDatabaseTimestamp(value: unknown): string {
@@ -154,9 +201,13 @@ function toEventRecord(row: NeonEventRow): MissionTimelineEventRecord {
   return {
     id: row.id,
     missionId: row.mission_id,
+    taskId: row.task_id,
+    eventStatus: row.event_status as MissionTimelineEventRecord['eventStatus'],
     actorName: row.actor_name,
     actorRole: row.actor_role,
     action: row.action,
+    detail: row.detail,
+    summary: row.summary,
     timestamp: normalizeDatabaseTimestamp(row.event_timestamp),
     sequenceIndex: normalizeDatabaseInteger(row.sequence_index) ?? 0,
     parallelGroupId: row.parallel_group_id,
@@ -165,6 +216,34 @@ function toEventRecord(row: NeonEventRow): MissionTimelineEventRecord {
     sourceLabel: row.source_label,
     freshness: row.freshness as MissionTimelineEventRecord['freshness'],
   };
+}
+
+function compareTaskEventsDescending(
+  a: Pick<MissionTimelineEventRecord, 'timestamp' | 'sequenceIndex' | 'id'>,
+  b: Pick<MissionTimelineEventRecord, 'timestamp' | 'sequenceIndex' | 'id'>,
+): number {
+  const aTime = Date.parse(a.timestamp ?? '');
+  const bTime = Date.parse(b.timestamp ?? '');
+
+  if (Number.isFinite(aTime) && Number.isFinite(bTime) && aTime !== bTime) {
+    return bTime - aTime;
+  }
+
+  if (!Number.isFinite(aTime) && Number.isFinite(bTime)) {
+    return 1;
+  }
+
+  if (Number.isFinite(aTime) && !Number.isFinite(bTime)) {
+    return -1;
+  }
+
+  const aSequence = typeof a.sequenceIndex === 'number' && Number.isFinite(a.sequenceIndex) ? a.sequenceIndex : -1;
+  const bSequence = typeof b.sequenceIndex === 'number' && Number.isFinite(b.sequenceIndex) ? b.sequenceIndex : -1;
+  if (aSequence !== bSequence) {
+    return bSequence - aSequence;
+  }
+
+  return b.id.localeCompare(a.id);
 }
 
 function buildMissionSnapshot(input: AgentEventWriteInput, previous: MissionVersionedRecord | null, version: number): MissionVersionedRecord {
@@ -224,6 +303,10 @@ class EmptyDashboardStore implements DashboardStore {
     return buildMissionTimelineResponse(null, [], generatedAt, DEFAULT_SOURCE_NAME);
   }
 
+  async readAgentEvents(): Promise<MissionTimelineEventRecord[]> {
+    return [];
+  }
+
   async appendAgentEvent(): Promise<AgentEventWriteResult> {
     throw new Error('Database connection is not configured');
   }
@@ -240,6 +323,33 @@ class MemoryDashboardStore implements DashboardStore {
 
   async readDashboard(generatedAt = new Date()): Promise<DashboardResponse> {
     return buildDashboardResponse(this.missions, generatedAt, this.events, DEFAULT_SOURCE_NAME);
+  }
+
+  async readAgentEvents(filters: { role?: string; eventStatus?: string; search?: string }): Promise<MissionTimelineEventRecord[]> {
+    const roleFilter = normalizeRoleFilter(filters.role);
+    const eventStatusFilter = normalizeSearchFilter(filters.eventStatus);
+    const searchFilter = normalizeSearchFilter(filters.search);
+
+    return this.events.filter((event) => {
+      if (roleFilter && event.actorRole !== roleFilter) {
+        return false;
+      }
+
+      if (eventStatusFilter && event.eventStatus !== eventStatusFilter) {
+        return false;
+      }
+
+      if (searchFilter) {
+        const searchLower = searchFilter.toLowerCase();
+        const haystack = [event.action, event.detail, event.summary]
+          .filter((value): value is string => Boolean(value))
+          .map((value) => value.toLowerCase())
+          .join(' ');
+        return haystack.includes(searchLower);
+      }
+
+      return true;
+    });
   }
 
   async readLatestMissionTimeline(generatedAt = new Date()): Promise<MissionTimelineResponse> {
@@ -278,6 +388,14 @@ class MemoryDashboardStore implements DashboardStore {
   }
 
   async appendAgentEvent(input: AgentEventWriteInput): Promise<AgentEventWriteResult> {
+    const latestTaskEvent = [...this.events]
+      .filter((event) => event.missionId === input.missionId && event.taskId === input.taskId)
+      .sort(compareTaskEventsDescending)[0] ?? null;
+
+    if (input.eventStatus === 'resumed' && latestTaskEvent?.eventStatus !== 'blocked') {
+      throw new DashboardStoreHttpError(422, 'Resumed events require a prior blocked event for the same missionId and taskId');
+    }
+
     if (this.events.some((event) => event.missionId === input.missionId && event.sequenceIndex === input.sequenceIndex)) {
       throw new Error('Sequence collision');
     }
@@ -299,6 +417,8 @@ class MemoryDashboardStore implements DashboardStore {
         action: snapshot.action,
         timestamp: input.eventTimestamp,
         sequenceIndex: input.sequenceIndex,
+        taskId: input.taskId,
+        eventStatus: input.eventStatus,
         parallelGroupId: cleanText(input.parallelGroupId),
         parallelOrder: typeof input.parallelOrder === 'number' && Number.isFinite(input.parallelOrder) ? input.parallelOrder : null,
         parallelSize: typeof input.parallelSize === 'number' && Number.isFinite(input.parallelSize) ? input.parallelSize : null,
@@ -322,6 +442,9 @@ class NeonDashboardStore implements DashboardStore {
   private async ensureSchema(): Promise<void> {
     if (!this.schemaReady) {
       this.schemaReady = (async () => {
+        await this.pool.query(`
+          create extension if not exists pg_trgm
+        `);
         await this.pool.query(`
           create table if not exists missions (
             id text primary key,
@@ -348,6 +471,8 @@ class NeonDashboardStore implements DashboardStore {
           create table if not exists mission_events (
             id text primary key,
             mission_id text not null references missions (id) on delete cascade,
+            task_id text not null,
+            event_status text,
             actor_name text not null,
             actor_role text,
             action text not null,
@@ -369,6 +494,24 @@ class NeonDashboardStore implements DashboardStore {
         `);
         await this.pool.query(`
           create index if not exists mission_events_mission_time_idx on mission_events (mission_id, event_timestamp asc, sequence_index asc)
+        `);
+        await this.pool.query(`
+          create index if not exists mission_events_actor_role_idx on mission_events (actor_role)
+        `);
+        await this.pool.query(`
+          create index if not exists mission_events_event_status_idx on mission_events (event_status)
+        `);
+        await this.pool.query(`
+          create index if not exists mission_events_task_lookup_idx on mission_events (mission_id, task_id, event_timestamp desc, sequence_index desc, id desc)
+        `);
+        await this.pool.query(`
+          create index if not exists mission_events_action_search_idx on mission_events using gin (lower(action) gin_trgm_ops)
+        `);
+        await this.pool.query(`
+          create index if not exists mission_events_detail_search_idx on mission_events using gin (lower(detail) gin_trgm_ops)
+        `);
+        await this.pool.query(`
+          create index if not exists mission_events_summary_search_idx on mission_events using gin (lower(summary) gin_trgm_ops)
         `);
         await this.pool.query(`
           create index if not exists mission_events_created_at_idx on mission_events (mission_id, created_at desc)
@@ -413,8 +556,8 @@ class NeonDashboardStore implements DashboardStore {
     await this.ensureSchema();
     const { rows } = await this.pool.query<NeonEventRow>(
       `
-        select id, mission_id, actor_name, actor_role, action, event_timestamp, sequence_index,
-               parallel_group_id, parallel_order, parallel_size, source_label, freshness
+        select id, mission_id, task_id, event_status, actor_name, actor_role, action, detail, summary,
+               event_timestamp, sequence_index, parallel_group_id, parallel_order, parallel_size, source_label, freshness
         from mission_events
         where mission_id = $1
         order by event_timestamp asc, sequence_index asc, coalesce(parallel_order, 2147483647) asc, id asc
@@ -440,11 +583,62 @@ class NeonDashboardStore implements DashboardStore {
     return buildMissionTimelineResponse(latestMission, events, generatedAt, DEFAULT_SOURCE_NAME);
   }
 
+  async readAgentEvents(filters: { role?: string, eventStatus?: string, search?: string }): Promise<MissionTimelineEventRecord[]> {
+    await this.ensureSchema();
+
+    let query = `
+      select id, mission_id, task_id, event_status, actor_name, actor_role, action, detail, summary,
+             event_timestamp, sequence_index, parallel_group_id, parallel_order, parallel_size, source_label, freshness
+      from mission_events
+      where 1=1
+    `;
+    const params: any[] = [];
+
+    const roleFilter = normalizeRoleFilter(filters.role);
+    const eventStatusFilter = normalizeSearchFilter(filters.eventStatus);
+    const searchFilter = normalizeSearchFilter(filters.search);
+
+    if (roleFilter) {
+      params.push(roleFilter);
+      query += ` and actor_role = $${params.length}`;
+    }
+
+    if (eventStatusFilter) {
+      params.push(eventStatusFilter);
+      query += ` and event_status = $${params.length}`;
+    }
+
+    if (searchFilter) {
+      const searchTerm = `%${searchFilter.toLowerCase()}%`;
+      params.push(searchTerm);
+      query += ` and (lower(action) like $${params.length} or lower(detail) like $${params.length} or lower(summary) like $${params.length})`;
+    }
+
+    query += ` order by event_timestamp desc, sequence_index desc`;
+
+    const { rows } = await this.pool.query<NeonEventRow>(query, params);
+    return rows.map(toEventRecord);
+  }
+
   async appendAgentEvent(input: AgentEventWriteInput): Promise<AgentEventWriteResult> {
     await this.ensureSchema();
     const client = await this.pool.connect();
     try {
       await client.query('begin');
+
+      const { rows: latestTaskRows } = await client.query<{ event_status: string | null }>(
+        `
+          select event_status
+          from mission_events
+          where mission_id = $1 and task_id = $2
+          order by event_timestamp desc, sequence_index desc, id desc
+          limit 1
+        `,
+        [input.missionId, input.taskId],
+      );
+      if (input.eventStatus === 'resumed' && latestTaskRows[0]?.event_status !== 'blocked') {
+        throw new DashboardStoreHttpError(422, 'Resumed events require a prior blocked event for the same missionId and taskId');
+      }
 
       const { rows: sequenceRows } = await client.query<{ id: string; payload_hash: string; request_id: string }>(
         `select id, payload_hash, request_id from mission_events where mission_id = $1 and sequence_index = $2 limit 1`,
@@ -541,34 +735,36 @@ class NeonDashboardStore implements DashboardStore {
       }
 
       const response = buildWriteResponse(requestId, snapshot, eventId, input.sequenceIndex, DEFAULT_SOURCE_NAME);
-      await client.query(
-        `
-          insert into mission_events (
-            id, mission_id, actor_name, actor_role, action, detail, summary, event_timestamp,
-            sequence_index, parallel_group_id, parallel_order, parallel_size, source_label, event_type,
-            request_id, payload_hash, freshness, created_at
-          ) values ($1,$2,$3,$4,$5,$6,$7,$8,$9,$10,$11,$12,$13,$14,$15,$16,$17, now())
-        `,
-        [
-          eventId,
-          snapshot.id,
-          snapshot.actorName,
-          snapshot.actorRole,
-          snapshot.action,
-          snapshot.detail,
-          snapshot.summary,
-          input.eventTimestamp,
-          input.sequenceIndex,
-          cleanText(input.parallelGroupId),
-          typeof input.parallelOrder === 'number' && Number.isFinite(input.parallelOrder) ? input.parallelOrder : null,
-          typeof input.parallelSize === 'number' && Number.isFinite(input.parallelSize) ? input.parallelSize : null,
-          cleanText(input.sourceLabel),
-          cleanText(input.eventType),
-          requestId,
-          input.payloadHash,
-          'fresh',
-        ],
-      );
+        await client.query(
+          `
+            insert into mission_events (
+              id, mission_id, task_id, event_status, actor_name, actor_role, action, detail, summary, event_timestamp,
+              sequence_index, parallel_group_id, parallel_order, parallel_size, source_label, event_type,
+              request_id, payload_hash, freshness, created_at
+            ) values ($1,$2,$3,$4,$5,$6,$7,$8,$9,$10,$11,$12,$13,$14,$15,$16,$17,$18,$19, now())
+          `,
+          [
+            eventId,
+            snapshot.id,
+            input.taskId,
+            cleanText(input.eventStatus),
+            snapshot.actorName,
+            snapshot.actorRole,
+            snapshot.action,
+            snapshot.detail,
+            snapshot.summary,
+            input.eventTimestamp,
+            input.sequenceIndex,
+            cleanText(input.parallelGroupId),
+            typeof input.parallelOrder === 'number' && Number.isFinite(input.parallelOrder) ? input.parallelOrder : null,
+            typeof input.parallelSize === 'number' && Number.isFinite(input.parallelSize) ? input.parallelSize : null,
+            cleanText(input.sourceLabel),
+            cleanText(input.eventType),
+            requestId,
+            input.payloadHash,
+            'fresh',
+          ],
+        );
 
       await client.query('commit');
       return response;

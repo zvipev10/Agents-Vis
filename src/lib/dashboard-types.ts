@@ -33,9 +33,13 @@ export interface MissionCard {
 export interface MissionTimelineEventRecord {
   id: string;
   missionId: string;
+  taskId?: string | null;
+  eventStatus?: 'started' | 'updated' | 'blocked' | 'resumed' | 'completed' | null;
   actorName?: string | null;
   actorRole?: string | null;
   action?: string | null;
+  detail?: string | null;
+  summary?: string | null;
   timestamp?: string | null;
   sequenceIndex?: number | null;
   parallelGroupId?: string | null;
@@ -45,12 +49,17 @@ export interface MissionTimelineEventRecord {
   freshness?: DashboardFreshness | null;
 }
 
+// Add taskId display and status badges for timeline events
 export interface MissionTimelineEvent {
   id: string;
   missionId: string;
+  taskId: string;
+  eventStatus: 'started' | 'updated' | 'blocked' | 'resumed' | 'completed';
   actorName: string;
   actorRole: string | null;
   action: string;
+  detail: string;
+  summary: string;
   timestamp: string | null;
   sequenceIndex: number;
   parallelGroupId: string | null;
@@ -60,6 +69,9 @@ export interface MissionTimelineEvent {
   freshness: DashboardFreshness;
   isStale: boolean;
   isParallel: boolean;
+  isBlocked?: boolean;
+  isResumed?: boolean;
+  durationMs?: number;
 }
 
 export interface MissionTimelineHeader {
@@ -124,9 +136,13 @@ function isMissionTimelineEvent(value: unknown): value is MissionTimelineEvent {
   return (
     typeof value.id === 'string' &&
     typeof value.missionId === 'string' &&
+    typeof value.taskId === 'string' &&
+    (value.eventStatus === 'started' || value.eventStatus === 'updated' || value.eventStatus === 'blocked' || value.eventStatus === 'resumed' || value.eventStatus === 'completed') &&
     typeof value.actorName === 'string' &&
     isStringOrNull(value.actorRole) &&
     typeof value.action === 'string' &&
+    typeof value.detail === 'string' &&
+    typeof value.summary === 'string' &&
     isStringOrNull(value.timestamp) &&
     typeof value.sequenceIndex === 'number' &&
     isStringOrNull(value.parallelGroupId) &&
@@ -135,10 +151,12 @@ function isMissionTimelineEvent(value: unknown): value is MissionTimelineEvent {
     isStringOrNull(value.sourceLabel) &&
     isFreshness(value.freshness) &&
     typeof value.isStale === 'boolean' &&
-    typeof value.isParallel === 'boolean'
+    typeof value.isParallel === 'boolean' &&
+    (typeof value.isBlocked === 'boolean' || value.isBlocked === undefined) &&
+    (typeof value.isResumed === 'boolean' || value.isResumed === undefined) &&
+    (isNumberOrNull(value.durationMs) || value.durationMs === undefined)
   );
 }
-
 function isMissionTimelineResponse(value: unknown): value is MissionTimelineResponse {
   if (!isObject(value)) {
     return false;

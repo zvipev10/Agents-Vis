@@ -39,6 +39,7 @@ describe('POST /api/agent-events', () => {
 
     const body = {
       missionId: 'mission-005',
+      taskId: 'task-101',
       missionTitle: 'Mission 005',
       missionStatus: 'running',
       actorName: 'Agent One',
@@ -53,6 +54,7 @@ describe('POST /api/agent-events', () => {
       parallelSize: 2,
       sourceLabel: 'agents-vis',
       eventType: 'mission_update',
+      eventStatus: 'updated',
     };
 
     const rawBody = JSON.stringify(body);
@@ -99,6 +101,8 @@ describe('POST /api/agent-events', () => {
 
     expect(response.status).toBe(400);
     expect(appendAgentEvent).not.toHaveBeenCalled();
-    expect((await response.json()).error).toMatch(/missionId is required/);
+    const payload = await response.json();
+    expect(payload.error).toBe('Validation failed');
+    expect(payload.fields).toEqual(expect.arrayContaining([expect.objectContaining({ field: 'missionId' })]));
   });
 });

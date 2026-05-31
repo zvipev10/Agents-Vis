@@ -62,9 +62,13 @@ function isMissionTimelineEventRecordLike(value: unknown): value is MissionTimel
   }
 
   return (
+    isStringOrNull(value.taskId) &&
+    (value.eventStatus === undefined || value.eventStatus === null || value.eventStatus === 'started' || value.eventStatus === 'updated' || value.eventStatus === 'blocked' || value.eventStatus === 'resumed' || value.eventStatus === 'completed') &&
     isStringOrNull(value.actorName) &&
     isStringOrNull(value.actorRole) &&
     isStringOrNull(value.action) &&
+    isStringOrNull(value.detail) &&
+    isStringOrNull(value.summary) &&
     isString(value.timestamp) &&
     typeof value.sequenceIndex === 'number' &&
     isStringOrNull(value.parallelGroupId) &&

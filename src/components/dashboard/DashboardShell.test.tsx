@@ -114,7 +114,7 @@ describe('DashboardShell', () => {
     expect(screen.getByRole('heading', { name: 'Reconnect the visibility brief' })).toBeInTheDocument();
     expect(screen.getByRole('heading', { name: 'One mission, one timeline' })).toBeInTheDocument();
     expect(screen.getByText('Latest mission only')).toBeInTheDocument();
-    expect(screen.getByText('Live')).toBeInTheDocument();
+    expect(screen.getAllByText('Live').length).toBeGreaterThan(0);
     expect(screen.getByText('Updated at')).toBeInTheDocument();
     expect(screen.getByText(/behind the live clock|in sync with the live clock/)).toBeInTheDocument();
     expect(screen.getByRole('heading', { name: 'Ari · Coordinator' })).toBeInTheDocument();

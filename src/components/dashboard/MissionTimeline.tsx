@@ -1,5 +1,5 @@
 'use client';
-
+import { useState } from 'react';
 import type { DashboardResponse, MissionCard as MissionCardData, MissionTimelineEvent } from '../../lib/dashboard-types';
 
 interface MissionTimelineProps {
@@ -119,6 +119,71 @@ function sequenceLabel(sequenceIndex: number): string {
   return `Step ${String(sequenceIndex).padStart(2, '0')}`;
 }
 
+function eventStatusLabel(status: MissionTimelineEvent['eventStatus']): string {
+  switch (status) {
+    case 'started':
+      return 'Started';
+    case 'updated':
+      return 'Updated';
+    case 'blocked':
+      return 'Blocked';
+    case 'resumed':
+      return 'Resumed';
+    case 'completed':
+      return 'Completed';
+    default:
+      return 'Status unavailable';
+  }
+}
+
+const TIMELINE_EVENT_STATUSES: MissionTimelineEvent['eventStatus'][] = ['started', 'updated', 'blocked', 'resumed', 'completed'];
+
+function formatDurationMs(durationMs: number): string {
+  if (durationMs < 1000) {
+    return `${durationMs}ms`;
+  }
+
+  const seconds = Math.round(durationMs / 1000);
+  if (seconds < 60) {
+    return `${seconds}s`;
+  }
+
+  const minutes = Math.floor(seconds / 60);
+  const remainderSeconds = seconds % 60;
+  return remainderSeconds === 0 ? `${minutes}m` : `${minutes}m ${remainderSeconds}s`;
+}
+
+function displayTaskId(event: MissionTimelineEvent): string {
+  const fallbackTaskId = `${event.missionId}-step-${String(event.sequenceIndex).padStart(2, '0')}`;
+  const normalizedTaskId = event.taskId.trim();
+
+  if (normalizedTaskId.length === 0 || normalizedTaskId.toLowerCase() === 'unknown') {
+    return fallbackTaskId;
+  }
+
+  return normalizedTaskId;
+}
+
+function buildSearchText(event: MissionTimelineEvent): string {
+  return [event.action, event.detail, event.summary].filter((value): value is string => typeof value === 'string' && value.length > 0).join(' ').toLowerCase();
+}
+
+function formatEventStateLabel(event: MissionTimelineEvent): string {
+  if (event.eventStatus === 'blocked') {
+    return 'Blocked';
+  }
+
+  if (event.eventStatus === 'resumed') {
+    return event.durationMs ? `Resumed · ${formatDurationMs(event.durationMs)}` : 'Resumed';
+  }
+
+  return eventStatusLabel(event.eventStatus);
+}
+
+function roleOptions(events: MissionTimelineEvent[]): string[] {
+  return Array.from(new Set(events.map((event) => event.actorRole).filter((value): value is string => Boolean(value)))).sort((left, right) => left.localeCompare(right));
+}
+
 function groupTimelineEvents(events: MissionTimelineEvent[]): TimelineGroup[] {
   const groups: TimelineGroup[] = [];
 
@@ -214,7 +279,21 @@ export function MissionTimeline({ dashboard }: MissionTimelineProps) {
   const latestMission = dashboard.latestMission;
   const freshness = freshnessTone(dashboard);
   const lag = lagMinutes(dashboard.generatedAt, dashboard.source.updatedAt);
-  const timelineGroups = groupTimelineEvents(dashboard.timeline.events);
+  const [searchQuery, setSearchQuery] = useState('');
+  const [roleFilter, setRoleFilter] = useState<string | 'all'>('all');
+  const [statusFilter, setStatusFilter] = useState<string | 'all'>('all');
+
+  const roleFilterOptions = roleOptions(dashboard.timeline.events);
+  const searchTerm = searchQuery.trim().toLowerCase();
+  const filteredEvents = dashboard.timeline.events.filter((event) => {
+    const matchesSearch = searchTerm === '' || buildSearchText(event).includes(searchTerm);
+    const matchesRole = roleFilter === 'all' || event.actorRole === roleFilter;
+    const matchesStatus = statusFilter === 'all' || event.eventStatus === statusFilter;
+    return matchesSearch && matchesRole && matchesStatus;
+  });
+
+  const noMatchResults = dashboard.timeline.events.length > 0 && filteredEvents.length === 0;
+  const timelineGroups = groupTimelineEvents(filteredEvents);
   const eventCountLabel = dashboard.timeline.eventCount === 1 ? '1 recorded step' : `${dashboard.timeline.eventCount} recorded steps`;
   const parallelGroupCount = timelineGroups.filter((group) => group.kind === 'parallel').length;
 
@@ -228,6 +307,32 @@ export function MissionTimeline({ dashboard }: MissionTimelineProps) {
             Read the latest mission as a story: who acted, what changed, and why it matters, while keeping chronology,
             visible parallel work, and freshness cues intact.
           </p>
+        </div>
+
+        <div className="mission-timeline__filters" style={{ display: 'flex', gap: '10px', margin: '20px 0' }}>
+          <input
+            type="text"
+            placeholder="Search action, detail, or summary..."
+            value={searchQuery}
+            aria-label="Search action, detail, or summary"
+            onChange={(e) => setSearchQuery(e.target.value)}
+          />
+          <select value={roleFilter} aria-label="Role filter" onChange={(e) => setRoleFilter(e.target.value)}>
+            <option value="all">All roles</option>
+            {roleFilterOptions.map((role) => (
+              <option key={role} value={role}>
+                {role}
+              </option>
+            ))}
+          </select>
+          <select value={statusFilter} aria-label="Status filter" onChange={(e) => setStatusFilter(e.target.value)}>
+            <option value="all">All statuses</option>
+            {TIMELINE_EVENT_STATUSES.map((status) => (
+              <option key={status} value={status}>
+                {eventStatusLabel(status)}
+              </option>
+            ))}
+          </select>
         </div>
 
         <div className="mission-timeline__status" aria-label="Mission freshness status">
@@ -283,7 +388,20 @@ export function MissionTimeline({ dashboard }: MissionTimelineProps) {
             </div>
           </article>
 
-          {timelineGroups.length > 0 ? (
+          {noMatchResults ? (
+            <article className="timeline-event timeline-event--empty" aria-label="No matching timeline events">
+              <div className="timeline-event__card timeline-event__card--empty">
+                <div className="timeline-event__meta">
+                  <span className="timeline-event__index">--</span>
+                  <span className="timeline-event__time">No matches found</span>
+                </div>
+                <h3 className="timeline-event__title">No events match the current filters</h3>
+                <p className="timeline-event__body">
+                  Clear search or relax the role and status filters to bring the latest mission steps back into view.
+                </p>
+              </div>
+            </article>
+          ) : timelineGroups.length > 0 ? (
             timelineGroups.map((group) => {
               const firstEvent = group.events[0];
 
@@ -323,6 +441,14 @@ export function MissionTimeline({ dashboard }: MissionTimelineProps) {
                               <span className="timeline-event__index">Lane {laneNumber} of {laneSize}</span>
                               <h4>{eventActorLabel(event)}</h4>
                               <p>{event.action}</p>
+                              {event.detail ? <p className="timeline-event__detail">{event.detail}</p> : null}
+                              <div className="timeline-event__footer">
+                                <span className="badge badge--source">{event.sourceLabel ?? 'Live source'}</span>
+                                <span className={`badge ${freshnessBadgeClass(event.freshness)}`}>{freshnessEventLabel(event.freshness)}</span>
+                                <span className="badge badge--status">{eventStatusLabel(event.eventStatus)}</span>
+                                <span className="badge badge--role">Role: {event.actorRole ?? 'Unknown'}</span>
+                                <span className="badge badge--task">Task: {displayTaskId(event)}</span>
+                              </div>
                             </div>
                           );
                         })}
@@ -343,11 +469,24 @@ export function MissionTimeline({ dashboard }: MissionTimelineProps) {
                     </div>
                     <h3 className="timeline-event__title">{eventActorLabel(event)}</h3>
                     <p className="timeline-event__body">{event.action}</p>
+                    {event.detail ? <p className="timeline-event__detail">{event.detail}</p> : null}
+                    {event.summary ? <p className="timeline-event__summary">{event.summary}</p> : null}
                     <div className="timeline-event__footer">
                       <span className="badge badge--source">{event.sourceLabel ?? 'Live source'}</span>
                       <span className={`badge ${freshnessBadgeClass(event.freshness)}`}>
                         {freshnessEventLabel(event.freshness)}
                       </span>
+                      {event.eventStatus === 'blocked' ? (
+                        <span className="badge badge--blocked" role="status" aria-label="blocked">
+                          Blocked
+                        </span>
+                      ) : event.eventStatus === 'resumed' ? (
+                        <span className="badge badge--resumed">{formatEventStateLabel(event)}</span>
+                      ) : (
+                        <span className="badge badge--status">{eventStatusLabel(event.eventStatus)}</span>
+                      )}
+                      <span className="badge badge--role">Role: {event.actorRole ?? 'Unknown'}</span>
+                      <span className="badge badge--task">Task: {displayTaskId(event)}</span>
                     </div>
                   </div>
                 </article>

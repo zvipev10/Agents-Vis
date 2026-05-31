@@ -151,9 +151,70 @@ describe('buildMissionTimelineResponse', () => {
     expect(timeline.events[1]?.parallelGroupId).toBe('branch-a');
     expect(timeline.freshnessState).toBe('partial');
   });
-});
+  it('derives blocked durations and replaces legacy unknown task identifiers deterministically', () => {
+    const timeline = buildMissionTimelineResponse(
+      {
+        id: 'mission-blocked',
+        title: 'Handle blocked tasks',
+        status: 'running',
+        updatedAt: '2026-05-26T10:10:00.000Z',
+      },
+      [
+        {
+          id: 'event-blocked',
+          missionId: 'mission-blocked',
+          taskId: 'task-200',
+          eventStatus: 'blocked',
+          actorName: 'Ari',
+          actorRole: 'Coordinator',
+          action: 'blocked on an external dependency',
+          detail: 'The task is waiting for the upstream API contract to be finalized.',
+          summary: 'Waiting on upstream API contract',
+          timestamp: '2026-05-26T10:00:00.000Z',
+          sequenceIndex: 10,
+          sourceLabel: 'repository-backed live source',
+        },
+        {
+          id: 'event-resumed',
+          missionId: 'mission-blocked',
+          taskId: 'task-200',
+          eventStatus: 'resumed',
+          actorName: 'Ari',
+          actorRole: 'Coordinator',
+          action: 'resumed after the dependency landed',
+          detail: 'The task can now continue because the upstream API contract is available.',
+          summary: 'Dependency landed, work resumed',
+          timestamp: '2026-05-26T10:07:30.000Z',
+          sequenceIndex: 11,
+          sourceLabel: 'repository-backed live source',
+        },
+        {
+          id: 'event-legacy-task',
+          missionId: 'mission-blocked',
+          taskId: 'unknown',
+          actorName: 'Ari',
+          actorRole: 'Coordinator',
+          action: 'documented the legacy task mapping',
+          detail: 'Older rows with a missing task identifier should fall back to a stable step label.',
+          summary: 'Legacy task identifier mapped',
+          timestamp: '2026-05-26T10:09:00.000Z',
+          sequenceIndex: 12,
+          sourceLabel: 'repository-backed live source',
+        },
+      ],
+      new Date('2026-05-26T10:11:00.000Z'),
+    );
 
-describe('buildDashboardResponse', () => {
+    expect(timeline.events.map((event) => event.taskId)).toEqual([
+      'task-200',
+      'task-200',
+      'mission-blocked-step-12',
+    ]);
+    expect(timeline.events[1]?.durationMs).toBe(450_000);
+    expect(timeline.events[1]?.isResumed).toBe(true);
+    expect(timeline.events[2]?.taskId).toBe('mission-blocked-step-12');
+  });
+
   it('prefers the most recent valid timestamp and keeps invalid timestamps at the end', () => {
     const dashboard = buildDashboardResponse(records, new Date('2026-05-26T10:05:30.000Z'), missionLatestEvents);
 

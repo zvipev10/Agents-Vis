@@ -25,6 +25,11 @@ function cleanText(value: unknown): string | null {
   return trimmed.length > 0 ? trimmed : null;
 }
 
+function normalizeTaskId(value: unknown): string | null {
+  const taskId = cleanText(value);
+  return taskId && taskId.toLowerCase() !== 'unknown' ? taskId : null;
+}
+
 function toMillis(value: string | null | undefined): number | null {
   if (!value) {
     return null;
@@ -59,10 +64,22 @@ function buildDetail(record: MissionRecord, action: string): string {
   return cleanText(record.detail) ?? cleanText(record.summary) ?? cleanText(record.title) ?? action ?? FALLBACK_DETAIL;
 }
 
+function normalizeEventStatus(value: unknown): MissionTimelineEvent['eventStatus'] {
+  return value === 'started' || value === 'updated' || value === 'blocked' || value === 'resumed' || value === 'completed'
+    ? value
+    : 'updated';
+}
+
+function buildTaskId(record: MissionTimelineEventRecord, sequenceIndex: number): string {
+  return normalizeTaskId(record.taskId) ?? `${record.missionId}-step-${String(sequenceIndex).padStart(2, '0')}`;
+}
+
 function buildMissionTimelineEvent(record: MissionTimelineEventRecord): MissionTimelineEvent {
   const actorName = cleanText(record.actorName) ?? 'Unknown agent';
   const actorRole = cleanText(record.actorRole);
   const action = cleanText(record.action) ?? FALLBACK_ACTION;
+  const detail = cleanText(record.detail) ?? cleanText(record.summary) ?? FALLBACK_DETAIL;
+  const summary = cleanText(record.summary) ?? action;
   const timestamp = cleanText(record.timestamp);
   const sequenceIndex = typeof record.sequenceIndex === 'number' && Number.isFinite(record.sequenceIndex) ? record.sequenceIndex : 0;
   const parallelGroupId = cleanText(record.parallelGroupId);
@@ -73,13 +90,19 @@ function buildMissionTimelineEvent(record: MissionTimelineEventRecord): MissionT
     record.freshness,
     actorName === 'Unknown agent' || timestamp === null || cleanText(record.action) === null ? 'partial' : 'fresh',
   );
+  const taskId = buildTaskId(record, sequenceIndex);
+  const eventStatus = normalizeEventStatus(record.eventStatus);
 
   return {
     id: record.id,
     missionId: record.missionId,
+    taskId,
+    eventStatus,
     actorName,
     actorRole,
     action,
+    detail,
+    summary,
     timestamp,
     sequenceIndex,
     parallelGroupId,
@@ -89,6 +112,8 @@ function buildMissionTimelineEvent(record: MissionTimelineEventRecord): MissionT
     freshness,
     isStale: freshness === 'stale',
     isParallel: parallelGroupId !== null || (parallelSize ?? 0) > 1,
+    isBlocked: eventStatus === 'blocked',
+    isResumed: eventStatus === 'resumed',
   };
 }
 
@@ -154,6 +179,32 @@ function timelineLagMs(updatedAt: string | null, generatedAt: Date): number | nu
   return Math.max(0, generatedAt.getTime() - updatedMillis);
 }
 
+function annotateBlockedDurations(events: MissionTimelineEvent[]): void {
+  const blockedAtByTask = new Map<string, number>();
+
+  for (const event of events) {
+    const timestamp = toMillis(event.timestamp);
+    if (timestamp === null) {
+      continue;
+    }
+
+    if (event.eventStatus === 'blocked') {
+      blockedAtByTask.set(event.taskId, timestamp);
+      event.isBlocked = true;
+      continue;
+    }
+
+    if (event.eventStatus === 'resumed') {
+      event.isResumed = true;
+      const blockedAt = blockedAtByTask.get(event.taskId);
+      if (blockedAt !== undefined && timestamp >= blockedAt) {
+        event.durationMs = timestamp - blockedAt;
+      }
+      continue;
+    }
+  }
+}
+
 function freshnessForTimeline(events: MissionTimelineEvent[], lagMs: number | null): DashboardFreshness {
   if (events.length === 0) {
     return 'empty';
@@ -186,6 +237,7 @@ export function buildMissionTimelineResponse(
 ): MissionTimelineResponse {
   const relevantEventRecords = mission ? eventRecords.filter((event) => event.missionId === mission.id) : [];
   const events = relevantEventRecords.map(buildMissionTimelineEvent).sort(compareTimelineEvents);
+  annotateBlockedDurations(events);
   const header = mission ? buildMissionTimelineHeader(mission, events) : null;
   const lagMs = timelineLagMs(header?.updatedAt ?? null, generatedAt);
   const freshnessState = freshnessForTimeline(events, lagMs);
